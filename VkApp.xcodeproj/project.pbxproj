@@ -20,6 +20,8 @@
 		EC2CA36F2295C23100268F8E /* AllFriendsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2CA36E2295C23100268F8E /* AllFriendsCell.swift */; };
 		EC2CA3722295D06D00268F8E /* FriendsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2CA3712295D06D00268F8E /* FriendsModel.swift */; };
 		EC3FB74722B815000086D3D8 /* AvatarImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3FB74622B815000086D3D8 /* AvatarImage.swift */; };
+		EC4BF0CF22CA4FBA00E081F9 /* VKAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4BF0CE22CA4FBA00E081F9 /* VKAuthViewController.swift */; };
+		EC4BF0D222CA513900E081F9 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4BF0D122CA513900E081F9 /* WebView.swift */; };
 		EC4C04B422A3BEF400914F28 /* LettersPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4C04B322A3BEF400914F28 /* LettersPicker.swift */; };
 		EC575E7322B0F27B00242AB6 /* NewsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC575E7222B0F27B00242AB6 /* NewsCell.xib */; };
 		EC575E7922B0F30C00242AB6 /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC575E7822B0F30C00242AB6 /* NewsCell.swift */; };
@@ -83,6 +85,8 @@
 		EC2CA36E2295C23100268F8E /* AllFriendsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllFriendsCell.swift; sourceTree = "<group>"; };
 		EC2CA3712295D06D00268F8E /* FriendsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsModel.swift; sourceTree = "<group>"; };
 		EC3FB74622B815000086D3D8 /* AvatarImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImage.swift; sourceTree = "<group>"; };
+		EC4BF0CE22CA4FBA00E081F9 /* VKAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKAuthViewController.swift; sourceTree = "<group>"; };
+		EC4BF0D122CA513900E081F9 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		EC4C04B322A3BEF400914F28 /* LettersPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LettersPicker.swift; sourceTree = "<group>"; };
 		EC575E7222B0F27B00242AB6 /* NewsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewsCell.xib; sourceTree = "<group>"; };
 		EC575E7822B0F30C00242AB6 /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
@@ -157,6 +161,7 @@
 		EC156053228DCAD8000A5D38 /* VkApp */ = {
 			isa = PBXGroup;
 			children = (
+				EC4BF0D022CA507B00E081F9 /* VkAuthScreen */,
 				ECF2E2DB22BBF8E4000D1924 /* Transition */,
 				ECE5E58522BAB6A200CA9FAF /* StoryBoards */,
 				ECE5E58222BAAF5F00CA9FAF /* FriendPhotoGallery */,
@@ -232,6 +237,14 @@
 			name = AvatarImage;
 			sourceTree = "<group>";
 		};
+		EC4BF0D022CA507B00E081F9 /* VkAuthScreen */ = {
+			isa = PBXGroup;
+			children = (
+				EC4BF0D122CA513900E081F9 /* WebView.swift */,
+			);
+			name = VkAuthScreen;
+			sourceTree = "<group>";
+		};
 		EC68CBDE229C204F00D12745 /* Style */ = {
 			isa = PBXGroup;
 			children = (
@@ -277,6 +290,7 @@
 				EC156082228DCB46000A5D38 /* LoginFormController.swift */,
 				ECCECA012291AD67000DC9C3 /* MyTabBar.swift */,
 				ECCECA042291BEB2000DC9C3 /* NavigationController.swift */,
+				EC4BF0CE22CA4FBA00E081F9 /* VKAuthViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -461,7 +475,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC575E7B22B0FCB600242AB6 /* NewsModel.swift in Sources */,
+				EC4BF0D222CA513900E081F9 /* WebView.swift in Sources */,
 				EC4C04B422A3BEF400914F28 /* LettersPicker.swift in Sources */,
+				EC4BF0CF22CA4FBA00E081F9 /* VKAuthViewController.swift in Sources */,
 				EC575E7922B0F30C00242AB6 /* NewsCell.swift in Sources */,
 				ECF2E2DD22BBF948000D1924 /* CustomPushAnimator.swift in Sources */,
 				ECFB3D3422B65E040017F5C2 /* CircleProgressBar.swift in Sources */,

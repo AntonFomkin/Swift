@@ -42,8 +42,44 @@ class AllFriendsViewController: UIViewController {
         super.viewDidLoad()
         // MARK: Подгружаем прототип ячейки
         tableView.register(UINib(nibName: "HeaderCell", bundle: nil), forHeaderFooterViewReuseIdentifier:  HeaderCellSectionTableView.reuseId)
+        getAllFriend()
     }
 
+    // MARK: Получаем данные через API VK
+    func getAllFriend() {
+        
+        let auth = Session.instance
+        // Конфигурация по умолчанию
+        let configuration = URLSessionConfiguration.default
+        
+        // собственная сессия
+        let session =  URLSession(configuration: configuration)
+        
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "api.vk.com"
+        urlComponents.path = "/method/friends.get"
+        urlComponents.queryItems = [
+            URLQueryItem(name: "user_id", value: auth.userId),
+            URLQueryItem(name: "access_token", value: auth.token),
+            URLQueryItem(name: "fields", value: "domain"),
+            URLQueryItem(name: "order", value: "name"),
+            URLQueryItem(name: "v", value: "5.100")
+        ]
+        
+        var request = URLRequest(url: urlComponents.url!)
+        
+        request.httpMethod = "GET"
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+            print("AllFriendJSON = \(json!)")
+        }
+        
+        task.resume()
+    }
+    
+    
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         

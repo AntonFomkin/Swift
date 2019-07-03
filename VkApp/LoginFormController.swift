@@ -8,15 +8,6 @@
 
 import UIKit
 
-class Session {
-    
-    static let autorityInfo = Session()
-    
-    private init(){}
-    
-    var token : String? = nil
-    var userId : Int? = nil
-}
 
 class LoginFormController: UIViewController {
 

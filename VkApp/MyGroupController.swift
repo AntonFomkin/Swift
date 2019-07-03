@@ -22,6 +22,71 @@ class MyGroupController: UITableViewController {
     var searchGroup : [Group] = []
     var searching = false
     
+    override func viewDidLoad() {
+        getAllGroups()
+    }
+    
+    // MARK: Получаем данные через API VK
+    func getAllGroups() {
+        
+        let auth = Session.instance
+        let configuration = URLSessionConfiguration.default
+        let session =  URLSession(configuration: configuration)
+        
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "api.vk.com"
+        urlComponents.path = "/method/groups.get"
+        urlComponents.queryItems = [
+            URLQueryItem(name: "user_id", value: auth.userId),
+            URLQueryItem(name: "access_token", value: auth.token),
+            URLQueryItem(name: "extended", value: "1"),
+            URLQueryItem(name: "v", value: "5.100")
+        ]
+        
+        var request = URLRequest(url: urlComponents.url!)
+        
+        request.httpMethod = "GET"
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+            print("AllGroupJSON = \(json!)")
+        }
+        
+        task.resume()
+    }
+    
+    
+    func getFindGroups(findText:String) {
+        
+        let auth = Session.instance
+        let configuration = URLSessionConfiguration.default
+        let session =  URLSession(configuration: configuration)
+        
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "api.vk.com"
+        urlComponents.path = "/method/groups.search"
+        urlComponents.queryItems = [
+            URLQueryItem(name: "user_id", value: auth.userId),
+            URLQueryItem(name: "access_token", value: auth.token),
+            URLQueryItem(name: "q", value: findText),
+            URLQueryItem(name: "v", value: "5.100")
+        ]
+        
+        var request = URLRequest(url: urlComponents.url!)
+        
+        request.httpMethod = "GET"
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+            print("FindGroupJSON = \(json!)")
+        }
+        
+        task.resume()
+    }
+    
+    
     // MARK: - Работаем с табличным представлением
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -98,6 +163,8 @@ extension MyGroupController: UISearchBarDelegate {
         searchGroup = groupList.filter({$0.name.lowercased().prefix(searchText.count) == searchText.lowercased()})
         searching = true
         tableView.reloadData()
+        getFindGroups(findText: searchText)
+        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

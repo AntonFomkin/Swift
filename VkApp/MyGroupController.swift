@@ -11,52 +11,29 @@ import UIKit
 class MyGroupController: UITableViewController {
 
     @IBOutlet weak var searchBar: UISearchBar!
-    
+ /*
     var groupList : [Group] = [
         Group(name: "Птицы", foto: UIImage(imageLiteralResourceName: "bird.png")),
         Group(name: "Бабочки", foto: UIImage(imageLiteralResourceName: "butterfly.png")),
         Group(name: "Рыбы", foto: UIImage(imageLiteralResourceName: "fish.png")),
         Group(name: "Жуки", foto: UIImage(imageLiteralResourceName: "ladybird.png"))
     ]
-    
-    var searchGroup : [Group] = []
+  */
+ 
+    var friendList : [UsersVK] = []
+    var groupList : [GroupVK] = []
+    var searchGroup : [GroupVK] = []
     var searching = false
     
+   
     override func viewDidLoad() {
-        getAllGroups()
+
+        getGroups() { [weak self] (groupList) in
+            self?.groupList = groupList
+            self?.tableView?.reloadData()
+        } 
     }
-    
-    // MARK: Получаем данные через API VK
-    func getAllGroups() {
-        
-        let auth = Session.instance
-        let configuration = URLSessionConfiguration.default
-        let session =  URLSession(configuration: configuration)
-        
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "api.vk.com"
-        urlComponents.path = "/method/groups.get"
-        urlComponents.queryItems = [
-            URLQueryItem(name: "user_id", value: auth.userId),
-            URLQueryItem(name: "access_token", value: auth.token),
-            URLQueryItem(name: "extended", value: "1"),
-            URLQueryItem(name: "v", value: "5.100")
-        ]
-        
-        var request = URLRequest(url: urlComponents.url!)
-        
-        request.httpMethod = "GET"
-        let task = session.dataTask(with: request) { (data, response, error) in
-            
-            let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
-            print("AllGroupJSON = \(json!)")
-        }
-        
-        task.resume()
-    }
-    
-    
+  
     func getFindGroups(findText:String) {
         
         let auth = Session.instance
@@ -142,7 +119,7 @@ class MyGroupController: UITableViewController {
                         let newGroupName = NewGroupController.newGroupList[indexPath.row].name
                         let newGroupFoto = NewGroupController.newGroupList[indexPath.row].foto
                         // Проверяем, что такого города нет в списке
-                        let newGroup = Group(name: newGroupName, foto: newGroupFoto)
+                        let newGroup = GroupVK(name: newGroupName, foto: newGroupFoto)
                     
                             if !groupList.contains(newGroup) {
                                 groupList.append(newGroup)

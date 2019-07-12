@@ -10,10 +10,10 @@ import UIKit
 
 class NewGroupController: UITableViewController {
 
-    var newGroupList : [Group] = [
-        Group(name: "Львы", foto: UIImage(imageLiteralResourceName: "lion.png")),
-        Group(name: "Кролики", foto: UIImage(imageLiteralResourceName: "rabbit.png")),
-        Group(name: "Черепахи", foto: UIImage(imageLiteralResourceName: "turtle.png"))
+    var newGroupList : [GroupVK] = [
+        GroupVK(name: "Львы", foto: UIImage(imageLiteralResourceName: "lion.png")),
+        GroupVK(name: "Кролики", foto: UIImage(imageLiteralResourceName: "rabbit.png")),
+        GroupVK(name: "Черепахи", foto: UIImage(imageLiteralResourceName: "turtle.png"))
     ]
     
     // MARK: Работаем с табличным представлением

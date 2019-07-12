@@ -9,7 +9,7 @@
 import UIKit
 
 var selectedItem : Int = 0
-
+/*
     var friendList : [User] = [
         User(name: "Маша Пронина", foto: UIImage(imageLiteralResourceName: "women1.png")),
         User(name: "Петя Синицын", foto: UIImage(imageLiteralResourceName: "man1.png")),
@@ -22,12 +22,16 @@ var selectedItem : Int = 0
         User(name: "Зина Козлова", foto: UIImage(imageLiteralResourceName: "women2.png")),
         User(name: "Ольга Елкина", foto: UIImage(imageLiteralResourceName: "women2.png"))
     ].sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
+*/
 
 
+//let friendList = requestVKUser().sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
 
+var friendListTwo : [UsersVK] = []
 var arrayFirstLetters : [Character?] = []
 var selectTableView : UITableView! = nil
 var myIndexPath : IndexPath = IndexPath.init(row: 0, section: 0)
+
 
 class AllFriendsViewController: UIViewController {
   
@@ -35,66 +39,40 @@ class AllFriendsViewController: UIViewController {
     @IBOutlet weak var lettersPicker: LettersPicker!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var searchUser : [User] = []
+    var friendList : [UsersVK] = []
+    var searchUser : [UsersVK] = []
     var searching = false
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+  
+override func viewDidLoad() {
+    super.viewDidLoad()
+
         // MARK: Подгружаем прототип ячейки
         tableView.register(UINib(nibName: "HeaderCell", bundle: nil), forHeaderFooterViewReuseIdentifier:  HeaderCellSectionTableView.reuseId)
-        getAllFriend()
-    }
-
-    // MARK: Получаем данные через API VK
-    func getAllFriend() {
         
-        let auth = Session.instance
-        // Конфигурация по умолчанию
-        let configuration = URLSessionConfiguration.default
-        
-        // собственная сессия
-        let session =  URLSession(configuration: configuration)
-        
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "api.vk.com"
-        urlComponents.path = "/method/friends.get"
-        urlComponents.queryItems = [
-            URLQueryItem(name: "user_id", value: auth.userId),
-            URLQueryItem(name: "access_token", value: auth.token),
-            URLQueryItem(name: "fields", value: "domain"),
-            URLQueryItem(name: "order", value: "name"),
-            URLQueryItem(name: "v", value: "5.100")
-        ]
-        
-        var request = URLRequest(url: urlComponents.url!)
-        
-        request.httpMethod = "GET"
-        let task = session.dataTask(with: request) { (data, response, error) in
+        getFriends() { [weak self] (friendList) in
             
-            let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
-            print("AllFriendJSON = \(json!)")
+            self?.friendList = friendList.sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
+            
+            friendListTwo = self!.friendList
+            arrayFirstLetters = []
+            self?.lettersPicker.setupView(isSearch: false)
+            self?.tableView?.reloadData()
         }
-        
-        task.resume()
-    }
+}
     
-    
+   
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         let destinationVC = segue.destination as! CurrentFriendController
         let friendListForCurrentSection = friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[myIndexPath.section]!})
-       
+    
         destinationVC.currentFoto  = friendListForCurrentSection[myIndexPath.row].foto
         destinationVC.title = friendListForCurrentSection[myIndexPath.row].name
+      
     }
 }
-
-
-
-
-
 
 extension AllFriendsViewController: UITableViewDataSource {
 
@@ -186,7 +164,7 @@ extension AllFriendsViewController: UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-
+   
         searching = false
         searchBar.text = ""
         arrayFirstLetters = []

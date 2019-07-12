@@ -9,6 +9,7 @@
 import UIKit
 
 
+
 class CurrentFriendController: UICollectionViewController {
    
     var currentFoto: UIImage!

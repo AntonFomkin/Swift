@@ -19,6 +19,7 @@ class Session {
     var userId : String? = nil
 }
 
+
 class VKAuthViewController: UIViewController {
 
     @IBOutlet weak var webview: WebView! {
@@ -27,9 +28,11 @@ class VKAuthViewController: UIViewController {
         }
     }
     
+    let userDefaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        logoutVK()
+       // logoutVK()
         authorize()
         
     }
@@ -43,7 +46,7 @@ class VKAuthViewController: UIViewController {
         urlComponents.host = "oauth.vk.com"
         urlComponents.path = "/authorize"
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: "7039872"),
+            URLQueryItem(name: "client_id", value: "7039872" ), //"7052738"// "7052320"//"7039872"
             URLQueryItem(name: "display", value: "mobile"),
             URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
             URLQueryItem(name: "scope", value: "262150"),
@@ -94,6 +97,13 @@ extension VKAuthViewController: WKNavigationDelegate {
         let auth = Session.instance
         auth.token = token
         auth.userId = idUser!
+        userDefaults.set(auth.userId, forKey: "userId")
+        let userId : String? = userDefaults.string(forKey: "userId") as? String
+        print("userId = \(userId!)")
+       
+        KeychainWrapper.standard.set(token!, forKey: "myToken")
+        let myToken : String? = KeychainWrapper.standard.string(forKey: "myToken")
+        print("token = \(myToken!)")
         
         decisionHandler(.cancel)
         performSegue(withIdentifier: "gotoTab", sender: nil)

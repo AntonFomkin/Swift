@@ -16,6 +16,8 @@
 		EC15606A228DCAE1000A5D38 /* VkAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC156069228DCAE1000A5D38 /* VkAppTests.swift */; };
 		EC156075228DCAE1000A5D38 /* VkAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC156074228DCAE1000A5D38 /* VkAppUITests.swift */; };
 		EC156083228DCB46000A5D38 /* LoginFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC156082228DCB46000A5D38 /* LoginFormController.swift */; };
+		EC1964F422D8DBEF009ADD04 /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1964F322D8DBEF009ADD04 /* KeychainWrapper.swift */; };
+		EC1964F722D8DC84009ADD04 /* KeychainItemAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1964F622D8DC84009ADD04 /* KeychainItemAccessibility.swift */; };
 		EC277C4C22B0DF740031B414 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC277C4B22B0DF740031B414 /* NewsViewController.swift */; };
 		EC2CA36F2295C23100268F8E /* AllFriendsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2CA36E2295C23100268F8E /* AllFriendsCell.swift */; };
 		EC2CA3722295D06D00268F8E /* FriendsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2CA3712295D06D00268F8E /* FriendsModel.swift */; };
@@ -35,6 +37,7 @@
 		ECB2094D2297399F0025F80D /* NewGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB2094C2297399F0025F80D /* NewGroupCell.swift */; };
 		ECC840B422AD620A00E3CE3F /* HeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECC840B322AD620A00E3CE3F /* HeaderCell.xib */; };
 		ECC840BA22AD65CD00E3CE3F /* HeaderCellSectionTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC840B922AD65CD00E3CE3F /* HeaderCellSectionTableView.swift */; };
+		ECC8D82522D35074000E2DE0 /* VKService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC8D82422D35074000E2DE0 /* VKService.swift */; };
 		ECCD15D622A677C9008A3EB1 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCD15D522A677C9008A3EB1 /* GradientView.swift */; };
 		ECCECA022291AD67000DC9C3 /* MyTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCECA012291AD67000DC9C3 /* MyTabBar.swift */; };
 		ECCECA052291BEB2000DC9C3 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCECA042291BEB2000DC9C3 /* NavigationController.swift */; };
@@ -44,6 +47,7 @@
 		ECE5E58422BAAF7A00CA9FAF /* FriendPhotoGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE5E58322BAAF7900CA9FAF /* FriendPhotoGalleryViewController.swift */; };
 		ECE5E58922BAC52800CA9FAF /* CustomCollectionViewCurrentFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE5E58822BAC52800CA9FAF /* CustomCollectionViewCurrentFriend.swift */; };
 		ECF2E2DD22BBF948000D1924 /* CustomPushAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF2E2DC22BBF948000D1924 /* CustomPushAnimator.swift */; };
+		ECF52CEB22D774C9000B03FD /* FotoCurrentUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF52CEA22D774C9000B03FD /* FotoCurrentUserModel.swift */; };
 		ECFB3D3422B65E040017F5C2 /* CircleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFB3D3322B65E040017F5C2 /* CircleProgressBar.swift */; };
 		ECFB3D3722B65E3A0017F5C2 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFB3D3622B65E3A0017F5C2 /* ProgressBar.swift */; };
 /* End PBXBuildFile section */
@@ -81,6 +85,8 @@
 		EC156074228DCAE1000A5D38 /* VkAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VkAppUITests.swift; sourceTree = "<group>"; };
 		EC156076228DCAE1000A5D38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC156082228DCB46000A5D38 /* LoginFormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormController.swift; sourceTree = "<group>"; };
+		EC1964F322D8DBEF009ADD04 /* KeychainWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainWrapper.swift; sourceTree = "<group>"; };
+		EC1964F622D8DC84009ADD04 /* KeychainItemAccessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainItemAccessibility.swift; sourceTree = "<group>"; };
 		EC277C4B22B0DF740031B414 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
 		EC2CA36E2295C23100268F8E /* AllFriendsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllFriendsCell.swift; sourceTree = "<group>"; };
 		EC2CA3712295D06D00268F8E /* FriendsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsModel.swift; sourceTree = "<group>"; };
@@ -100,6 +106,7 @@
 		ECB2094C2297399F0025F80D /* NewGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupCell.swift; sourceTree = "<group>"; };
 		ECC840B322AD620A00E3CE3F /* HeaderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderCell.xib; sourceTree = "<group>"; };
 		ECC840B922AD65CD00E3CE3F /* HeaderCellSectionTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCellSectionTableView.swift; sourceTree = "<group>"; };
+		ECC8D82422D35074000E2DE0 /* VKService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKService.swift; sourceTree = "<group>"; };
 		ECCD15D522A677C9008A3EB1 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		ECCECA012291AD67000DC9C3 /* MyTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTabBar.swift; sourceTree = "<group>"; };
 		ECCECA042291BEB2000DC9C3 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
@@ -109,6 +116,7 @@
 		ECE5E58322BAAF7900CA9FAF /* FriendPhotoGalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendPhotoGalleryViewController.swift; sourceTree = "<group>"; };
 		ECE5E58822BAC52800CA9FAF /* CustomCollectionViewCurrentFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewCurrentFriend.swift; sourceTree = "<group>"; };
 		ECF2E2DC22BBF948000D1924 /* CustomPushAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPushAnimator.swift; sourceTree = "<group>"; };
+		ECF52CEA22D774C9000B03FD /* FotoCurrentUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FotoCurrentUserModel.swift; sourceTree = "<group>"; };
 		ECFB3D3322B65E040017F5C2 /* CircleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBar.swift; sourceTree = "<group>"; };
 		ECFB3D3622B65E3A0017F5C2 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,6 +169,8 @@
 		EC156053228DCAD8000A5D38 /* VkApp */ = {
 			isa = PBXGroup;
 			children = (
+				EC1964F522D8DBF7009ADD04 /* KeychainWrapper */,
+				ECC8D82322D3503D000E2DE0 /* VKService */,
 				EC4BF0D022CA507B00E081F9 /* VkAuthScreen */,
 				ECF2E2DB22BBF8E4000D1924 /* Transition */,
 				ECE5E58522BAB6A200CA9FAF /* StoryBoards */,
@@ -196,6 +206,15 @@
 			path = VkAppUITests;
 			sourceTree = "<group>";
 		};
+		EC1964F522D8DBF7009ADD04 /* KeychainWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				EC1964F622D8DC84009ADD04 /* KeychainItemAccessibility.swift */,
+				EC1964F322D8DBEF009ADD04 /* KeychainWrapper.swift */,
+			);
+			name = KeychainWrapper;
+			sourceTree = "<group>";
+		};
 		EC277C4A22B0DAB30031B414 /* News */ = {
 			isa = PBXGroup;
 			children = (
@@ -225,6 +244,7 @@
 				EC2CA3712295D06D00268F8E /* FriendsModel.swift */,
 				EC575E7A22B0FCB600242AB6 /* NewsModel.swift */,
 				ECE5E57822BAAABC00CA9FAF /* GroupModel.swift */,
+				ECF52CEA22D774C9000B03FD /* FotoCurrentUserModel.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -282,6 +302,14 @@
 				ECB2094C2297399F0025F80D /* NewGroupCell.swift */,
 			);
 			path = NewGroup;
+			sourceTree = "<group>";
+		};
+		ECC8D82322D3503D000E2DE0 /* VKService */ = {
+			isa = PBXGroup;
+			children = (
+				ECC8D82422D35074000E2DE0 /* VKService.swift */,
+			);
+			name = VKService;
 			sourceTree = "<group>";
 		};
 		ECCECA032291ADC2000DC9C3 /* Controllers */ = {
@@ -479,6 +507,7 @@
 				EC4C04B422A3BEF400914F28 /* LettersPicker.swift in Sources */,
 				EC4BF0CF22CA4FBA00E081F9 /* VKAuthViewController.swift in Sources */,
 				EC575E7922B0F30C00242AB6 /* NewsCell.swift in Sources */,
+				EC1964F722D8DC84009ADD04 /* KeychainItemAccessibility.swift in Sources */,
 				ECF2E2DD22BBF948000D1924 /* CustomPushAnimator.swift in Sources */,
 				ECFB3D3422B65E040017F5C2 /* CircleProgressBar.swift in Sources */,
 				ECB2094B229739810025F80D /* NewGroupController.swift in Sources */,
@@ -498,8 +527,11 @@
 				ECB2094822972EFF0025F80D /* MyGroupCell.swift in Sources */,
 				ECB2094D2297399F0025F80D /* NewGroupCell.swift in Sources */,
 				EC00E25F22A27C9C0080E256 /* ShadowView.swift in Sources */,
+				EC1964F422D8DBEF009ADD04 /* KeychainWrapper.swift in Sources */,
 				ECCD15D622A677C9008A3EB1 /* GradientView.swift in Sources */,
 				ECCECA022291AD67000DC9C3 /* MyTabBar.swift in Sources */,
+				ECF52CEB22D774C9000B03FD /* FotoCurrentUserModel.swift in Sources */,
+				ECC8D82522D35074000E2DE0 /* VKService.swift in Sources */,
 				EC277C4C22B0DF740031B414 /* NewsViewController.swift in Sources */,
 				EC156055228DCAD8000A5D38 /* AppDelegate.swift in Sources */,
 				EC156083228DCB46000A5D38 /* LoginFormController.swift in Sources */,
@@ -688,7 +720,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = myVkApp;
+				PRODUCT_BUNDLE_IDENTIFIER = Vk2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -707,7 +739,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = myVkApp;
+				PRODUCT_BUNDLE_IDENTIFIER = Vk2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

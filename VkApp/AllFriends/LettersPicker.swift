@@ -23,7 +23,7 @@ class LettersPicker: UIControl {
     // MARK: - Создание массива первых букв от фамилии
     func firstLetter() {
         
-        for (_,values) in friendList.enumerated() {
+        for (_,values) in friendListTwo.enumerated() {
             for (index,value) in values.name.enumerated() {
                 if value == " " {
                     if !arrayFirstLetters.contains(values.name[values.name.index(values.name.startIndex, offsetBy: index+1)]) {
@@ -47,10 +47,10 @@ class LettersPicker: UIControl {
     
     func setupView(isSearch : Bool) {
 
-        if isSearch {
+        if (isSearch) {
         } else {
             firstLetter()
-        }
+          }
 
         buttons = []
         if stackView != nil {
@@ -96,5 +96,6 @@ class LettersPicker: UIControl {
         self.selectedLetter = letter
         myIndexPath.section = index
         selectTableView.scrollToRow(at: myIndexPath, at: .bottom, animated: true)
+        
     }
 }

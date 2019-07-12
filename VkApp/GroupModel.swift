@@ -17,3 +17,16 @@ struct Group : Equatable {
     var name : String
     var foto : UIImage
 }
+
+class GroupVK : Equatable {
+    static func == (lhs: GroupVK, rhs: GroupVK) -> Bool {
+        return lhs.name == rhs.name
+    }
+    
+    var name : String
+    var foto : UIImage
+    init(name : String, foto : UIImage) {
+        self.name = name
+        self.foto = foto
+    }
+}

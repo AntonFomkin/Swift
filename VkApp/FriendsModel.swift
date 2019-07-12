@@ -14,3 +14,13 @@ struct User {
     var foto : UIImage
 }
 
+
+class UsersVK {
+
+    var name : String
+    var foto : UIImage
+    init(name : String, foto : UIImage) {
+        self.name = name
+        self.foto = foto
+    }
+}

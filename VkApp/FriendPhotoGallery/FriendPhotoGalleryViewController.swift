@@ -14,8 +14,8 @@ class FriendPhotoGalleryViewController: UIViewController {
     @IBOutlet weak var previousPhoto: UIImageView!
     @IBOutlet weak var nextPhoto: UIImageView!
     var currentIndex : Int = 0
-   
-    
+    var galleryFoto : [FotoCurrentUser] = []
+   /*
     var galleryFoto : [UIImage] =
         [
             UIImage(imageLiteralResourceName: "foto1.png"),
@@ -25,12 +25,16 @@ class FriendPhotoGalleryViewController: UIViewController {
             UIImage(imageLiteralResourceName: "foto5.png"),
             UIImage(imageLiteralResourceName: "foto6.png")
     ]
+   */
     
     override func viewDidLoad () {
         super.viewDidLoad()
         
-        displayedPhoto.image = galleryFoto[currentIndex]
-        setupView()
+        getCurrentFoto() { [weak self] (galleryFoto) in
+            self?.galleryFoto = galleryFoto
+            self?.displayedPhoto.image = self?.galleryFoto[self?.currentIndex ?? 0].foto
+            self?.setupView()
+        }
     }
     
     func setupView() {
@@ -50,7 +54,7 @@ class FriendPhotoGalleryViewController: UIViewController {
     @objc func swippedLeft(_ gesture : UISwipeGestureRecognizer) {
         if currentIndex != galleryFoto.count - 1 {
             previousPhoto.image = nil
-            nextPhoto.image = galleryFoto[currentIndex + 1]
+            nextPhoto.image = galleryFoto[currentIndex + 1].foto
             nextPhoto.center.x += nextPhoto.frame.width
             
             UIView.animateKeyframes(withDuration: 1, delay: 0, options: [], animations : {
@@ -75,7 +79,7 @@ class FriendPhotoGalleryViewController: UIViewController {
                 self.nextPhoto.transform = .identity
                 self.nextPhoto.center.x += self.nextPhoto.frame.width
                 
-                self.displayedPhoto.image = self.galleryFoto[self.currentIndex]
+                self.displayedPhoto.image = self.galleryFoto[self.currentIndex].foto
             })
         }
     }
@@ -87,7 +91,7 @@ class FriendPhotoGalleryViewController: UIViewController {
         
         if currentIndex != 0 {
             nextPhoto.image = nil
-            previousPhoto.image = galleryFoto[currentIndex - 1]
+            previousPhoto.image = galleryFoto[currentIndex - 1].foto
             previousPhoto.center.x -= previousPhoto.frame.width
             
             UIView.animateKeyframes(withDuration: 1, delay: 0, options: [], animations : {
@@ -107,7 +111,7 @@ class FriendPhotoGalleryViewController: UIViewController {
             }, completion: { _ in
                 
                 self.currentIndex -= 1
-                self.displayedPhoto.image = self.galleryFoto[self.currentIndex]
+                self.displayedPhoto.image = self.galleryFoto[self.currentIndex].foto
                 self.displayedPhoto.transform = .identity
                 self.displayedPhoto.center.x -= 150
                 self.previousPhoto.transform = .identity

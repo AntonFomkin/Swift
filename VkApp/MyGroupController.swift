@@ -25,13 +25,14 @@ class MyGroupController: UITableViewController {
         Group(name: "Жуки", foto: UIImage(imageLiteralResourceName: "ladybird.png"))
     ]
   */
- 
+   
     var friendList : [UsersVK] = []
     var groupList : [GroupVK] = []
     var searchGroup : [GroupVK] = []
     var searching = false
     
-
+    var token: NotificationToken?
+    var getData : Results<RealmGroup>? = nil
     
     override func viewDidLoad() {
 
@@ -45,18 +46,47 @@ class MyGroupController: UITableViewController {
         // MARK: - Читаем из Realm
         do {
             let realm = try Realm()
-            let getData = Array(realm.objects(RealmGroup.self))
+            /* Теперь TableView cвязан с Results, оставлю это как предыдущий вариант
+               var getData = Array(realm.objects(RealmGroup.self))
+            */
+             getData = realm.objects(RealmGroup.self)
+         
+            self.token = getData?.observe {  (changes: RealmCollectionChange) in
+                switch changes {
+              
+                    case .initial:
+                        self.tableView.reloadData()
+                    
+                    case .update(_, let deletions, let insertions, let modifications):
+                        self.tableView.beginUpdates()
+                        self.tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }),
+                                                  with: .automatic)
+                        self.tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0)}),
+                                                  with: .automatic)
+                        self.tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }),
+                                                  with: .automatic)
+                        self.tableView.endUpdates()
+                    
+                    case .error(let error):
+                        print(error)
+                }
 
-            for value in getData{
+                print("данные изменились")
+            }
+
+            /* Теперь TableView cвязан с Results, оставлю это как предыдущий вариант
+            for value in Array(getData!) {
                 let image = UIImage(data: value.foto!)
                 groupList.append(GroupVK(name: value.name, foto: image! ))
             }
+            */
             
         } catch {
             print(error)
         }
-        
-        self.tableView.reloadData()
+        /* Теперь TableView cвязан с Results, оставлю это как предыдущий вариант
+         self.tableView.reloadData()
+         */
     }
     
     func getFindGroups(findText:String) {
@@ -99,7 +129,8 @@ class MyGroupController: UITableViewController {
         if searching {
             return searchGroup.count
         } else {
-            return groupList.count
+           // return groupList.count
+            return  getData?.count ?? 0
         }
     }
   
@@ -112,10 +143,15 @@ class MyGroupController: UITableViewController {
             cell.groupName.text = group
             cell.groupFoto.avatarImage.image = foto
         } else {
+           /* Теперь TableView cвязан с Results, оставлю это как предыдущий вариант
             let group = groupList[indexPath.row].name
             let foto = groupList[indexPath.row].foto
             cell.groupName.text = group
             cell.groupFoto.avatarImage.image = foto
+           */
+            let image = UIImage(data: (getData?[indexPath.row].foto)!)
+            cell.groupName?.text = getData?[indexPath.row].name ?? ""
+            cell.groupFoto?.avatarImage.image = image!
         }
 
         return cell

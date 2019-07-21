@@ -7,6 +7,12 @@
 //
 
 import UIKit
+import RealmSwift
+
+class RealmFriends: Object {
+    @objc dynamic var name = ""
+    @objc dynamic var foto : Data? = nil
+}
 
 var selectedItem : Int = 0
 /*
@@ -32,7 +38,6 @@ var arrayFirstLetters : [Character?] = []
 var selectTableView : UITableView! = nil
 var myIndexPath : IndexPath = IndexPath.init(row: 0, section: 0)
 
-
 class AllFriendsViewController: UIViewController {
   
     @IBOutlet weak var tableView: UITableView!
@@ -43,6 +48,8 @@ class AllFriendsViewController: UIViewController {
     var searchUser : [UsersVK] = []
     var searching = false
     
+    var token: NotificationToken?
+    var getData : Results<RealmFriends>? = nil
   
 override func viewDidLoad() {
     super.viewDidLoad()
@@ -51,14 +58,69 @@ override func viewDidLoad() {
         tableView.register(UINib(nibName: "HeaderCell", bundle: nil), forHeaderFooterViewReuseIdentifier:  HeaderCellSectionTableView.reuseId)
         
         getFriends() { [weak self] (friendList) in
-            
+            /*
             self?.friendList = friendList.sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
             
             friendListTwo = self!.friendList
             arrayFirstLetters = []
             self?.lettersPicker.setupView(isSearch: false)
             self?.tableView?.reloadData()
+             */
         }
+    
+    // MARK: - Читаем из Realm
+    do {
+        let realm = try Realm()
+        getData = realm.objects(RealmFriends.self)
+        
+        for value in Array(getData!) {
+            let image = UIImage(data: value.foto!)
+            friendList.append(UsersVK(name: value.name, foto: image! ))
+        }
+      
+        self.token = getData?.observe {  (changes: RealmCollectionChange) in
+            switch changes {
+                
+            case .initial:
+                self.friendList = self.friendList.sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
+                friendListTwo = self.friendList
+                arrayFirstLetters = []
+                self.lettersPicker.setupView(isSearch: false)
+                self.tableView.reloadData()
+          
+             case .update(_, let deletions, let insertions, let modifications):
+                print("No Ok")
+              /*
+                self.tableView.beginUpdates()
+                self.tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }),
+                                          with: .automatic)
+                self.tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0)}),
+                                          with: .automatic)
+                self.tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }),
+                                          with: .automatic)
+                
+                /*
+                 Здесь, вероятно, нужно оформить что то подобное
+                 
+                    let section = IndexSet(0...arrayFirstLetters.count)
+                    self.tableView.reloadSections(section, with: .automatic)
+                 
+                 но у меня не получилось - соответственно сразу вопрос преподавателю - как ?
+                */
+
+
+                self.tableView.endUpdates()
+                */
+            case .error(let error):
+                print(error)
+            }
+            print("данные изменились")
+        }
+
+    } catch {
+        print(error)
+    }
+  
 }
     
    
@@ -85,7 +147,6 @@ extension AllFriendsViewController: UITableViewDataSource {
 
         let headerCell = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderCellSectionTableView.reuseId) as! HeaderCellSectionTableView
         headerCell.nameLetter.text = String(arrayFirstLetters[section]!)
-        
         return headerCell
     }
     
@@ -93,6 +154,7 @@ extension AllFriendsViewController: UITableViewDataSource {
     
         selectTableView = tableView
         return arrayFirstLetters.count
+      
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -100,7 +162,8 @@ extension AllFriendsViewController: UITableViewDataSource {
         if searching {
             return searchUser.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
         } else {
-            return friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
+        //    return friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
+            return Array(getData!).filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
         }
     }
     
@@ -118,12 +181,22 @@ extension AllFriendsViewController: UITableViewDataSource {
             cell.friendFoto.avatarImage.image = foto
         
         } else {
-            
+        /*
             let friendListForCurrentSection = friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[indexPath.section]!})
             let friend = friendListForCurrentSection[indexPath.row].name
             let foto = friendListForCurrentSection[indexPath.row].foto
             cell.friendName.text = friend
             cell.friendFoto.avatarImage.image = foto
+        */
+ 
+      
+            let friendListForCurrentSection = Array(getData!).filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[indexPath.section]!})
+            let friend = friendListForCurrentSection[indexPath.row].name
+            let foto = friendListForCurrentSection[indexPath.row].foto
+            
+            cell.friendName?.text = friend
+            cell.friendFoto?.avatarImage.image = UIImage(data: foto!)
+
         }
 
         myIndexPath = indexPath

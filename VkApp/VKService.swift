@@ -139,6 +139,24 @@ func getFriends(completionBlock: @escaping ([UsersVK]) -> ()) {
                 getImage(url: fotoUrl!) {  (image) in
                     let image : UIImage = image
                     arr.append(UsersVK(name: firstName! + " " + lastName!, foto: image))
+                  
+                    // MARK: - Пишем в Realm
+                    let obj = RealmFriends()
+                    obj.name = firstName! + " " + lastName!
+                    obj.foto = image.pngData()//! as Data?
+                    if obj.foto == nil {return}
+                    do {
+                        let realm = try Realm()
+                        //   print(realm.configuration.fileURL)
+                        try realm.write {
+                            realm.add(obj)
+                        }
+                        
+                        
+                    } catch {
+                        print(error)
+                    }
+                    
                     completionBlock(arr);
                 }
             }

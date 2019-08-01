@@ -613,7 +613,9 @@
         <scene sceneID="cnT-i2-bhZ">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="3Te-zK-OFQ" customClass="NavigationController" customModule="VkApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Друзья" id="ImT-Nr-RlC"/>
+                    <tabBarItem key="tabBarItem" title="Друзья" id="ImT-Nr-RlC">
+                        <color key="badgeColor" red="1" green="0.34366996230000002" blue="0.1877738581" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="owX-as-MaX">
                         <rect key="frame" x="0.0" y="20" width="414" height="44"/>

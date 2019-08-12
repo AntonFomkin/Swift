@@ -95,7 +95,6 @@ class LettersPicker: UIControl {
         guard let letter : Character = arrayFirstLetters[index] else { return }
         self.selectedLetter = letter
         myIndexPath.section = index
-        selectTableView.scrollToRow(at: myIndexPath, at: .bottom, animated: true)
-        
+        selectTableView?.scrollToRow(at: myIndexPath, at: .bottom, animated: true)
     }
 }

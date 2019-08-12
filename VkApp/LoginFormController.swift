@@ -67,9 +67,9 @@ class LoginFormController: UIViewController {
         
         let tabBarAppearance = UITabBar.appearance()
         tabBarAppearance.tintColor = UIColor.white
-//        tabBarAppearance.barTintColor = UIColor(red: 242.0/255.0, green: 101.0/255.0, blue: 34.0/255.0, alpha: 1.0)
         tabBarAppearance.barTintColor = UIColor(red: 66.0, green: 118.0, blue: 166.0, alpha: 1.0)
 
+        
     }
 
    

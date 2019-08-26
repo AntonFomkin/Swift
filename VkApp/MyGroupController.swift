@@ -30,20 +30,35 @@ class MyGroupController: UITableViewController {
     var groupList : [GroupVK] = []
     var searchGroup : [GroupVK] = []
     var searching = false
+    var cellPresenters : [CellPresenter] = []
     
     var token: NotificationToken?
     var getData : Results<RealmGroup>? = nil
     
     override func viewDidLoad() {
 
-        getGroups() { [weak self] (groupList) in
-        /* Оставлю это решение
-             self?.groupList = groupList
-             self?.tableView?.reloadData()
-        */
-        } 
+        getGroups() { [weak self] (cellPresenters) in
+            
+            self?.cellPresenters = cellPresenters
+            
+            let dispatchGroup = DispatchGroup()
+            for cellPresenter in cellPresenters {
+                dispatchGroup.enter()
+                cellPresenter.downloadImage(completion: {
+                    dispatchGroup.leave()
+                })
+            }
+            
+            dispatchGroup.notify(queue: DispatchQueue.main) {
+                DispatchQueue.main.async {
+                    self?.tableView?.reloadData()
+                }
+            }
+            
+        }
        
         // MARK: - Читаем из Realm
+       /*
         do {
             let realm = try Realm()
             /* Теперь TableView cвязан с Results, оставлю это как предыдущий вариант
@@ -87,6 +102,9 @@ class MyGroupController: UITableViewController {
         /* Теперь TableView cвязан с Results, оставлю это как предыдущий вариант
          self.tableView.reloadData()
          */
+         */
+        
+        
     }
     
     func getFindGroups(findText:String) {
@@ -130,7 +148,8 @@ class MyGroupController: UITableViewController {
             return searchGroup.count
         } else {
            // return groupList.count
-            return  getData?.count ?? 0
+           // return  getData?.count ?? 0
+            return self.cellPresenters.count
         }
     }
   
@@ -149,9 +168,24 @@ class MyGroupController: UITableViewController {
             cell.groupName.text = group
             cell.groupFoto.avatarImage.image = foto
            */
+        /*
             let image = UIImage(data: (getData?[indexPath.row].foto)!)
             cell.groupName?.text = getData?[indexPath.row].name ?? ""
             cell.groupFoto?.avatarImage.image = image!
+          */
+            
+            let cellPresenter = self.cellPresenters[indexPath.row]
+            cell.groupName?.text =  self.cellPresenters[indexPath.row].text
+            
+            
+            cellPresenter.cell = cell
+            
+            if let image = cellPresenter.image {
+                cell.groupFoto.avatarImage?.image = image
+            } else {
+                cellPresenter.downloadImage(completion: {})
+            }
+            
         }
 
         return cell

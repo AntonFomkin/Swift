@@ -26,8 +26,8 @@ class NewsCell: UITableViewCell {
   
     @IBOutlet weak var newsFotoOne: UIImageView! {
         didSet {
-        self.newsFotoOne.layer.borderColor = UIColor.red.cgColor
-        self.newsFotoOne.layer.borderWidth = 2
+     //   self.newsFotoOne.layer.borderColor = UIColor.red.cgColor
+      //  self.newsFotoOne.layer.borderWidth = 2
         }
     }
  

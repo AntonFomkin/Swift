@@ -8,9 +8,9 @@
 
 import UIKit
 
-class NewsViewController: UITableViewController {
 
-    
+class NewsViewController: UITableViewController {
+   /*
     let textNews : [String] =
         ["Арт-директор фестиваля — Борис Гребенщиков, собирает в живописном саду в самом центре города разнообразных музыкантов со всего света, которых зачарованно слушают тысячи любителей необычной, душевной, этнической и самой редкой музыки",
          "Билеты на концерт на Крестовском острове - здесь: https://spb.ponominalu.ru/event/akvarium/03.07/20:00 ",
@@ -23,36 +23,65 @@ class NewsViewController: UITableViewController {
         FotoAlbum(imageOne: UIImage(imageLiteralResourceName: "bg2.png"), imageTwo: UIImage(imageLiteralResourceName: "man1.png")),
         FotoAlbum(imageOne: UIImage(imageLiteralResourceName: "kasp.png"), imageTwo: UIImage(imageLiteralResourceName: "man1.png"))
         ]
-
-     
-   
+     */
+    private var cellPresenters : [CellPresenter] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+      
         tableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier:  NewsCell.reuseId)
-    }
+        
+        getNews() { [weak self] (cellPresenters) in
+            
+            self?.cellPresenters = cellPresenters
+           
+            let dispatchGroup = DispatchGroup()
+            for cellPresenter in cellPresenters {
+                dispatchGroup.enter()
+                cellPresenter.downloadImage(completion: {
+                    dispatchGroup.leave()
+                })
+            }
+            
+            dispatchGroup.notify(queue: DispatchQueue.main) {
+                DispatchQueue.main.async {
+                    self?.tableView?.reloadData()
+                }
+            }
+            
+        }
+       
 
- 
-    
-    
+ }
     // MARK: Работаем с табличным представлением
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return textNews.count
+        return self.cellPresenters.count
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
-        cell.newsText.text = textNews[indexPath.row]
-        cell.newsFotoOne.image = fotoAlbumNews[indexPath.row].imageOne
-        cell.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: 250)
-   
+       
+        if cell.reuseIdentifier! == "NewsCell" {
+            
+            let cellPresenter = self.cellPresenters[indexPath.row]
+            cell.newsText?.text =  self.cellPresenters[indexPath.row].text
+          
+          
+            cellPresenter.cell = cell
+            
+                if let image = cellPresenter.image {
+                    cell.newsFotoOne?.image = image
+                } else {
+                    cellPresenter.downloadImage(completion: {})
+                }
+            
+        }
         return cell
     }
  
@@ -61,3 +90,7 @@ class NewsViewController: UITableViewController {
     }
 
  }
+
+
+
+

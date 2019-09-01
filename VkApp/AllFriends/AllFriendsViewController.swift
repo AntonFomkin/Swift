@@ -47,7 +47,7 @@ class AllFriendsViewController: UIViewController {
     var friendList : [UsersVK] = []
     var searchUser : [UsersVK] = []
     var searching = false
-    
+    var cellPresenters : [CellPresenter] = []
     var token: NotificationToken?
     var getData : Results<RealmFriends>? = nil
   
@@ -57,17 +57,38 @@ override func viewDidLoad() {
         // MARK: Подгружаем прототип ячейки
         tableView.register(UINib(nibName: "HeaderCell", bundle: nil), forHeaderFooterViewReuseIdentifier:  HeaderCellSectionTableView.reuseId)
         
-        getFriends() { [weak self] (friendList) in
-            /*
+        getFriends() { [weak self] (cellPresenters,friendList) in
+           
+            self?.cellPresenters = cellPresenters
+            self?.friendList = friendList
+            
             self?.friendList = friendList.sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
+     
+            self?.cellPresenters = cellPresenters.sorted(by: { $0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] < $1.text [$1.text.index(after: $1.text.firstIndex(of: " ")!)] } )
             
             friendListTwo = self!.friendList
             arrayFirstLetters = []
             self?.lettersPicker.setupView(isSearch: false)
-            self?.tableView?.reloadData()
-             */
+            
+            let dispatchGroup = DispatchGroup()
+            for cellPresenter in cellPresenters {
+                dispatchGroup.enter()
+                cellPresenter.downloadImage(completion: {
+                    dispatchGroup.leave()
+                })
+            }
+            
+            dispatchGroup.notify(queue: DispatchQueue.main) {
+                DispatchQueue.main.async {
+                    self?.tableView?.reloadData()
+                }
+            }
+            
+         
+            
+            
         }
-    
+    /*
     // MARK: - Читаем из Realm
     do {
         let realm = try Realm()
@@ -77,7 +98,9 @@ override func viewDidLoad() {
             let image = UIImage(data: value.foto!)
             friendList.append(UsersVK(name: value.name, foto: image! ))
         }
-      
+        
+
+    /*
         self.token = getData?.observe {  (changes: RealmCollectionChange) in
             switch changes {
                 
@@ -116,11 +139,11 @@ override func viewDidLoad() {
             }
             print("данные изменились")
         }
-
+*/
     } catch {
         print(error)
     }
-  
+*/
 }
     
    
@@ -162,8 +185,8 @@ extension AllFriendsViewController: UITableViewDataSource {
         if searching {
             return searchUser.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
         } else {
-        //    return friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
-            return Array(getData!).filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
+           return friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
+    //        return Array(getData!).filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
         }
     }
     
@@ -187,17 +210,37 @@ extension AllFriendsViewController: UITableViewDataSource {
             let foto = friendListForCurrentSection[indexPath.row].foto
             cell.friendName.text = friend
             cell.friendFoto.avatarImage.image = foto
-        */
+ */
  
-      
+      /*
             let friendListForCurrentSection = Array(getData!).filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[indexPath.section]!})
             let friend = friendListForCurrentSection[indexPath.row].name
             let foto = friendListForCurrentSection[indexPath.row].foto
             
             cell.friendName?.text = friend
             cell.friendFoto?.avatarImage.image = UIImage(data: foto!)
+*/
+          //  let friendListForCurrentSection = friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[indexPath.section]!})
+          //  let friend = friendListForCurrentSection[indexPath.row].name
+          ///  let foto = friendListForCurrentSection[indexPath.row].foto
+         //   cell.friendName.text = friend
+         //   cell.friendFoto.avatarImage.image = foto
+            
+            
+            let cellPresentersForCurrentSection = cellPresenters.filter({$0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] == arrayFirstLetters[indexPath.section]!})
 
+            let cellPresenter = self.cellPresenters[indexPath.row]
+            cell.friendName?.text = cellPresentersForCurrentSection[indexPath.row].text
+            
+            cellPresenter.cell = cell
+            
+            if let image = cellPresentersForCurrentSection[indexPath.row].image {
+                cell.friendFoto.avatarImage.image = image
+            } else {
+                cellPresenter.downloadImage(completion: {})
+            }
         }
+        
 
         myIndexPath = indexPath
         return cell

@@ -26,10 +26,10 @@ func getImage(url : URL, completionBlock: @escaping (UIImage) -> ()){
     taskGetFoto.resume()
 }
 
-func getGroups(completionBlock: @escaping ([GroupVK]) -> ()) {
+func getGroups(completionBlock: @escaping ([CellPresenter]) -> ()) {
     
-    var arr : [GroupVK] = []
-    
+   //var arr : [GroupVK] = []
+    var cellPresenters: [CellPresenter] = []
     let auth = Session.instance
     
     let configuration = URLSessionConfiguration.default
@@ -51,7 +51,7 @@ func getGroups(completionBlock: @escaping ([GroupVK]) -> ()) {
     let requestTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
         
         guard let data = data, error == nil else { return }
-        DispatchQueue.main.async() {
+        DispatchQueue.global().async() {
             let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
             
             let startPoint = json as? [String: AnyObject]
@@ -60,11 +60,10 @@ func getGroups(completionBlock: @escaping ([GroupVK]) -> ()) {
             
             for myGroup in finalObject! {
                 let myGroup  = myGroup as! [String: Any]
-                let groupName = myGroup["name"] as? String
-                let fotoUrl = URL(string: myGroup["photo_100"] as! String)
-                
-                
-                
+                let groupName = myGroup["name"] as! String
+               // let fotoUrl = URL(string: myGroup["photo_100"] as! String)
+                let urlFoto = myGroup["photo_100"] as! String
+               /*
                 getImage(url: fotoUrl!) {  (image) in
                     let image : UIImage = image
                     arr.append(GroupVK(name: groupName!, foto: image))
@@ -88,6 +87,15 @@ func getGroups(completionBlock: @escaping ([GroupVK]) -> ()) {
                  
                     completionBlock(arr);
                 }
+ */
+                let cellPresenter = CellPresenter(text: groupName,widthPhoto: 0, heightPhoto: 0, imageURLString: urlFoto)
+                cellPresenters.append(cellPresenter)
+               
+                DispatchQueue.main.async {
+                    completionBlock(cellPresenters)
+                }
+                
+                
             }
         }
     }
@@ -95,10 +103,10 @@ func getGroups(completionBlock: @escaping ([GroupVK]) -> ()) {
 }
 
 
-func getFriends(completionBlock: @escaping ([UsersVK]) -> ()) {
+func getFriends(completionBlock: @escaping ([CellPresenter],[UsersVK]) -> ()) {
     
     var arr : [UsersVK] = []
-    
+    var cellPresenters : [CellPresenter] = []
     let auth = Session.instance
     
     let configuration = URLSessionConfiguration.default
@@ -121,7 +129,7 @@ func getFriends(completionBlock: @escaping ([UsersVK]) -> ()) {
     let requestTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
         
         guard let data = data, error == nil else { return }
-        DispatchQueue.main.async() {
+        DispatchQueue.global().async() {
             let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
             
             let startPoint = json as? [String: AnyObject]
@@ -133,13 +141,14 @@ func getFriends(completionBlock: @escaping ([UsersVK]) -> ()) {
                 let firstName = myUsers["first_name"] as? String
                 let lastName = myUsers["last_name"] as? String
                 let fotoUrl = URL(string: myUsers["photo_100"] as! String)
+                let urlFoto = myUsers["photo_100"] as! String
                 
                 
-                
+                arr.append(UsersVK(name: firstName! + " " + lastName!, foto: nil))               /*
                 getImage(url: fotoUrl!) {  (image) in
                     let image : UIImage = image
                     arr.append(UsersVK(name: firstName! + " " + lastName!, foto: image))
-                  
+                  /*
                     // MARK: - Пишем в Realm
                     let obj = RealmFriends()
                     obj.name = firstName! + " " + lastName!
@@ -156,8 +165,15 @@ func getFriends(completionBlock: @escaping ([UsersVK]) -> ()) {
                     } catch {
                         print(error)
                     }
-                    
+                   */
                     completionBlock(arr);
+                }
+                */
+                let cellPresenter = CellPresenter(text: firstName! + " " + lastName!,widthPhoto: 0, heightPhoto: 0, imageURLString: urlFoto)
+                cellPresenters.append(cellPresenter)
+                
+                DispatchQueue.main.async {
+                    completionBlock(cellPresenters,arr)
                 }
             }
         }
@@ -214,3 +230,88 @@ func getCurrentFoto(completionBlock: @escaping ([FotoCurrentUser]) -> ()) {
     requestTask.resume()
     
 }
+
+
+func getNews(completionBlock: @escaping ([CellPresenter]) -> ()) {
+    
+    var cellPresenters: [CellPresenter] = []
+    let screenWidth = Int(UIScreen.main.bounds.width)
+    let auth = Session.instance
+    
+    let configuration = URLSessionConfiguration.default
+    let session =  URLSession(configuration: configuration)
+    
+    var urlComponents = URLComponents()
+    urlComponents.scheme = "https"
+    urlComponents.host = "api.vk.com"
+    urlComponents.path = "/method/newsfeed.get"
+    urlComponents.queryItems = [
+        URLQueryItem(name: "user_id", value: auth.userId),
+        URLQueryItem(name: "access_token", value: auth.token),
+        URLQueryItem(name: "filters", value: "post,photo"),
+        URLQueryItem(name: "v", value: "5.100")
+    ]
+    let request = URLRequest(url: urlComponents.url!)
+
+    
+    let requestTask = session.dataTask(with: request)  { (data: Data?, response: URLResponse?, error: Error?)  in
+        
+        guard let data = data, error == nil else { return }
+        DispatchQueue.global().async() {
+            let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+            let startPoint = json as? [String: AnyObject]
+            let responce = startPoint?["response"] as? [String: AnyObject]
+            let arrItems = responce?["items"] as? [AnyObject]
+            
+            for valueItem in arrItems!  {
+                
+                var widthFoto : Int = 0
+                var heightFoto : Int = 0
+                var urlFoto : String = ""
+                let valueItem  = valueItem as! [String: Any]
+                
+                if  valueItem["text"] == nil {continue}
+                let textNews = valueItem["text"] as! String
+                if textNews == "" {continue}
+                
+                if !valueItem.keys.contains("attachments") {continue}
+                
+                let arrAttachments = valueItem["attachments"] as! [AnyObject]
+
+                for valueAtt in arrAttachments {
+                    let valueAtt = valueAtt as! [String: Any]
+                    let typeAtt = valueAtt["type"] as! String
+                    
+                    if typeAtt == "photo" {
+                        let photo = valueAtt["photo"] as! [String: Any]
+                        let sizesPhoto = photo["sizes"] as! [AnyObject]
+                        
+                        for currentFoto in sizesPhoto {
+                            let currentFoto = currentFoto as! [String: Any]
+                            let uFoto = currentFoto["url"] as! String
+                            let wFoto = currentFoto["width"] as! Int
+                            let hFoto = currentFoto["height"] as! Int
+                            
+                            if wFoto <= screenWidth {
+                                if wFoto > widthFoto {
+                                    widthFoto = wFoto
+                                    heightFoto = hFoto
+                                    urlFoto = uFoto
+                                }
+                            }
+                        }
+                            let cellPresenter = CellPresenter(text: textNews,widthPhoto: widthFoto, heightPhoto: heightFoto, imageURLString: urlFoto)
+                            cellPresenters.append(cellPresenter)
+                        
+                            DispatchQueue.main.async {
+                                completionBlock(cellPresenters)
+                            }
+                        
+                        break //arrAttachments
+                    }
+                }
+            }
+        }
+    }
+    requestTask.resume()
+ }

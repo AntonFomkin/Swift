@@ -57,7 +57,7 @@ override func viewDidLoad() {
         // MARK: Подгружаем прототип ячейки
         tableView.register(UINib(nibName: "HeaderCell", bundle: nil), forHeaderFooterViewReuseIdentifier:  HeaderCellSectionTableView.reuseId)
         
-        getFriends() { [weak self] (cellPresenters,friendList) in
+    getDataFromVK(typeOfContent: .getFriends) { [weak self] (cellPresenters,friendList) in
            
             self?.cellPresenters = cellPresenters
             self?.friendList = friendList

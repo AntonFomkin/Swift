@@ -35,9 +35,10 @@ class MyGroupController: UITableViewController {
     var token: NotificationToken?
     var getData : Results<RealmGroup>? = nil
     
+    /* theCap - просто заглушка */
     override func viewDidLoad() {
 
-        getGroups() { [weak self] (cellPresenters) in
+        getDataFromVK(typeOfContent: .getGroups) { [weak self] (cellPresenters,theCap) in
             
             self?.cellPresenters = cellPresenters
             

@@ -31,7 +31,8 @@ class NewsViewController: UITableViewController {
       
         tableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier:  NewsCell.reuseId)
         
-        getNews() { [weak self] (cellPresenters) in
+        /* theCap - просто заглушка */
+        getDataFromVK(typeOfContent: .getNews) { [weak self] (cellPresenters, theCap) in
             
             self?.cellPresenters = cellPresenters
            

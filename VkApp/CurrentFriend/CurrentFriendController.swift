@@ -13,9 +13,30 @@ import UIKit
 class CurrentFriendController: UICollectionViewController {
    
     var currentFoto: UIImage!
+    var cellPresenters : [CellPresenter] = []
     
     override func viewDidLoad() {
-        getAllFotoCurrentUser()
+      //  getAllFotoCurrentUser()
+        getDataFromVK(findGroupsToName: nil ,typeOfContent: .getPhotoAlbumCurrentFriend) { [weak self] (cellPresenters,theCap) in
+            
+            self?.cellPresenters = cellPresenters
+            
+            let dispatchGroup = DispatchGroup()
+            for cellPresenter in cellPresenters {
+                dispatchGroup.enter()
+                cellPresenter.downloadImage(completion: {
+                    dispatchGroup.leave()
+                })
+            }
+            
+            dispatchGroup.notify(queue: DispatchQueue.main) {
+                DispatchQueue.main.async {
+                   // self?.tableView?.reloadData()
+                }
+            }
+            
+        }
+        
     }
     
     // MARK: Получаем данные через API VK
@@ -56,14 +77,15 @@ class CurrentFriendController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CurrentFriendCell", for: indexPath) as! CurrentFriendCell
         cell.currentFriendFoto.image = currentFoto
-
+        
         return cell
     }
-
+    
 }
+
 

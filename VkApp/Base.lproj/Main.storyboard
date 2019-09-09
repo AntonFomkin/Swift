@@ -289,6 +289,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="AddButton" destination="Qin-T3-Xqv" id="9is-fq-w2f"/>
                         <outlet property="searchBar" destination="9Sg-sc-EHe" id="yht-8n-wHy"/>
                     </connections>
                 </tableViewController>
@@ -486,35 +487,39 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" sectionInsetReference="safeArea" id="fcc-4v-RbC">
-                            <size key="itemSize" width="150" height="150"/>
+                            <size key="itemSize" width="190" height="190"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CurrentFriendCell" id="gnm-j6-LQj" customClass="CurrentFriendCell" customModule="VkApp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                <rect key="frame" x="0.0" y="0.0" width="190" height="190"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="190" height="190"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalCompressionResistancePriority="130" verticalCompressionResistancePriority="130" placeholderIntrinsicWidth="128" placeholderIntrinsicHeight="128" image="man2" translatesAutoresizingMaskIntoConstraints="NO" id="ZQU-jM-ivO">
-                                            <rect key="frame" x="11" y="7" width="128" height="112"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalCompressionResistancePriority="130" verticalCompressionResistancePriority="130" placeholderIntrinsicWidth="128" placeholderIntrinsicHeight="128" image="man2" translatesAutoresizingMaskIntoConstraints="NO" id="ZQU-jM-ivO" customClass="CurrentFriendImage" customModule="VkApp" customModuleProvider="target">
+                                            <rect key="frame" x="5" y="5" width="180" height="180"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="128" id="Fuq-Ef-bs8"/>
-                                                <constraint firstAttribute="height" constant="112" id="Q43-3W-uhL"/>
+                                                <constraint firstAttribute="width" constant="180" id="KLM-T8-D5J"/>
+                                                <constraint firstAttribute="height" constant="180" id="XUU-ZO-0sv"/>
                                             </constraints>
                                         </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j5J-d7-bDJ" customClass="LikeControl" customModule="VkApp" customModuleProvider="target">
-                                            <rect key="frame" x="5" y="114" width="30" height="30"/>
+                                            <rect key="frame" x="5" y="155" width="30" height="30"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="2kl-XC-v4a"/>
-                                                <constraint firstAttribute="height" constant="30" id="4sy-LM-XjB"/>
+                                                <constraint firstAttribute="height" constant="30" id="ei2-Ph-T1H"/>
+                                                <constraint firstAttribute="width" constant="30" id="oyY-WF-Fxs"/>
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YCe-Z6-WPV">
-                                            <rect key="frame" x="45" y="119" width="45" height="21"/>
+                                            <rect key="frame" x="40" y="155" width="30" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="30" id="1GE-R2-9aa"/>
+                                                <constraint firstAttribute="width" constant="30" id="K2R-52-CKp"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -522,20 +527,14 @@
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="YCe-Z6-WPV" firstAttribute="leading" secondItem="j5J-d7-bDJ" secondAttribute="trailing" constant="10" id="C3I-eG-koO"/>
-                                    <constraint firstAttribute="trailingMargin" secondItem="YCe-Z6-WPV" secondAttribute="trailing" constant="52" id="JtL-V0-PlH"/>
-                                    <constraint firstItem="ZQU-jM-ivO" firstAttribute="top" secondItem="gnm-j6-LQj" secondAttribute="top" constant="7" id="NQz-xR-Kmo"/>
-                                    <constraint firstAttribute="bottom" secondItem="j5J-d7-bDJ" secondAttribute="bottom" constant="6" id="U9P-2P-QnK"/>
-                                    <constraint firstAttribute="trailing" secondItem="ZQU-jM-ivO" secondAttribute="trailing" constant="11" id="byG-X1-k7W"/>
-                                    <constraint firstItem="ZQU-jM-ivO" firstAttribute="leading" secondItem="gnm-j6-LQj" secondAttribute="leading" constant="11" id="iv5-R1-tDH"/>
-                                    <constraint firstItem="j5J-d7-bDJ" firstAttribute="top" secondItem="gnm-j6-LQj" secondAttribute="top" constant="114" id="mDB-Lt-bEk"/>
-                                    <constraint firstItem="ZQU-jM-ivO" firstAttribute="centerX" secondItem="gnm-j6-LQj" secondAttribute="centerX" id="mDO-md-fAP"/>
-                                    <constraint firstItem="j5J-d7-bDJ" firstAttribute="leading" secondItem="gnm-j6-LQj" secondAttribute="leading" constant="5" id="oxl-bm-lWX"/>
-                                    <constraint firstItem="YCe-Z6-WPV" firstAttribute="top" secondItem="ZQU-jM-ivO" secondAttribute="bottom" id="pZi-Iy-uAd"/>
-                                    <constraint firstAttribute="trailing" secondItem="j5J-d7-bDJ" secondAttribute="trailing" constant="115" id="pp7-pQ-xse"/>
-                                    <constraint firstAttribute="bottomMargin" secondItem="YCe-Z6-WPV" secondAttribute="bottom" constant="2" id="z7J-RN-iGx"/>
+                                    <constraint firstItem="YCe-Z6-WPV" firstAttribute="leading" secondItem="j5J-d7-bDJ" secondAttribute="trailing" constant="5" id="Aeh-KN-oJ0"/>
+                                    <constraint firstAttribute="bottom" secondItem="j5J-d7-bDJ" secondAttribute="bottom" constant="5" id="Gqa-tT-M0T"/>
+                                    <constraint firstAttribute="bottom" secondItem="YCe-Z6-WPV" secondAttribute="bottom" constant="5" id="HHH-aP-O04"/>
+                                    <constraint firstItem="ZQU-jM-ivO" firstAttribute="centerY" secondItem="gnm-j6-LQj" secondAttribute="centerY" id="SXM-qA-Dii"/>
+                                    <constraint firstItem="j5J-d7-bDJ" firstAttribute="leading" secondItem="gnm-j6-LQj" secondAttribute="leading" constant="5" id="rML-j8-uue"/>
+                                    <constraint firstItem="ZQU-jM-ivO" firstAttribute="centerX" secondItem="gnm-j6-LQj" secondAttribute="centerX" id="xaa-A4-oFg"/>
                                 </constraints>
-                                <size key="customSize" width="150" height="150"/>
+                                <size key="customSize" width="190" height="190"/>
                                 <connections>
                                     <outlet property="countLike" destination="YCe-Z6-WPV" id="cfK-Cj-sd5"/>
                                     <outlet property="currentFriendFoto" destination="ZQU-jM-ivO" id="y6K-ZJ-RLq"/>

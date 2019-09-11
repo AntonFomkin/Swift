@@ -20,8 +20,11 @@ class CustomCollectionViewCurrentFriend: UICollectionView {
         super.draw(rect)
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 150, height: 150)
+        layout.itemSize = CGSize(width: 250, height: 250)
+      
         layout.sectionInset = UIEdgeInsets(top: 20, left: (self.frame.width / 2) - (layout.itemSize.width / 2) , bottom: 0, right: (self.frame.width / 2) - (layout.itemSize.width / 2))
+
+
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
         collectionViewLayout = layout

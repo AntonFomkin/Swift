@@ -59,7 +59,7 @@ class VKAuthViewController: UIViewController {
             URLQueryItem(name: "client_id", value: "7039872" ), //"7052738"// "7052320"//"7039872"
             URLQueryItem(name: "display", value: "mobile"),
             URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
-            URLQueryItem(name: "scope", value: "wall,friends"), /*262150, */
+            URLQueryItem(name: "scope", value: "wall,friends,photos"), /*262150, */
             URLQueryItem(name: "response_type", value: "token"),
             URLQueryItem(name: "state", value: "123456")//,
            // URLQueryItem(name: "revoke", value: "1")

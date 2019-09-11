@@ -29,6 +29,8 @@ class CurrentFriendCell: UICollectionViewCell {
         layer.backgroundColor = UIColor.white.cgColor
         layer.masksToBounds = true
         
+        currentFriendFoto.layer.cornerRadius = currentFriendFoto.layer.frame.width / 2 
+        
         countLike.text = "0"
         countLike.textColor = .gray
     }

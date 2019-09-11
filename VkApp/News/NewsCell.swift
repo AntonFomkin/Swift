@@ -10,11 +10,11 @@ import UIKit
 var newsRowHeight : CGFloat = 0.0
 
 class NewsCell: UITableViewCell {
-
+    
     static var reuseId: String = "NewsCell"
     var newsTextHeight : CGFloat? = nil
     var likeButtonHeight : CGFloat? = nil
-   
+    
     @IBOutlet weak var newsText: UILabel! {
         didSet {
             if (newsTextHeight == nil) && (likeButtonHeight != nil) {
@@ -23,19 +23,19 @@ class NewsCell: UITableViewCell {
             }
         }
     }
-  
+    
     @IBOutlet weak var newsFotoOne: UIImageView! {
         didSet {
-     //   self.newsFotoOne.layer.borderColor = UIColor.red.cgColor
-      //  self.newsFotoOne.layer.borderWidth = 2
+            //   self.newsFotoOne.layer.borderColor = UIColor.red.cgColor
+            //  self.newsFotoOne.layer.borderWidth = 2
         }
     }
- 
-
+    
+    
     @IBOutlet weak var likeButton: LikeControl! {
         didSet {
             if likeButtonHeight == nil {
-                    likeButtonHeight = self.likeButton.frame.height
+                likeButtonHeight = self.likeButton.frame.height
             }
         }
     }
@@ -50,13 +50,15 @@ class NewsCell: UITableViewCell {
         super.prepareForReuse()
         newsText.text = nil
         newsFotoOne.image = nil
-
+        
+        likeButton.deselectLike()
         
         if likeButton.isLiked != true  {
-            countLike.text = nil
+            countLike?.text = "0"
+            countLike.textColor = .gray
         }
     }
-
+    
     override func layoutIfNeeded() {
         super.layoutIfNeeded()
         
@@ -64,20 +66,21 @@ class NewsCell: UITableViewCell {
         self.newsFotoOne.layer.cornerRadius = 20
         self.progressView.updateProgressBar()
     }
-
+    
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-            if likeButton.isLiked != true {
-                countLike.text = "0"
-                countLike.textColor = .gray
-            }
+        if likeButton.isLiked != true {
+            countLike.text = "0"
+            countLike.textColor = .gray
+            
+        }
     }
     
     //MARK: Запуск анимации
     @objc func likeButtonDidTapped() {
         if likeButton.isLiked {
-  
+            
             UIView.transition(with: countLike,
                               duration: 1,
                               options: .transitionFlipFromLeft,
@@ -87,17 +90,16 @@ class NewsCell: UITableViewCell {
             countLike.textColor = .red
             
         }  else {
-         
+            
             UIView.transition(with: countLike,
                               duration: 1,
                               options: .transitionFlipFromRight,
                               animations: {
                                 self.countLike.text = "0"
-                                
             })
             countLike.textColor = .gray
         }
- 
+        
     }
-
+    
 }

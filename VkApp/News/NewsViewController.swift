@@ -31,7 +31,8 @@ class NewsViewController: UITableViewController {
       
         tableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier:  NewsCell.reuseId)
         
-        getNews() { [weak self] (cellPresenters) in
+        /* theCap - просто заглушка */
+        getDataFromVK(findGroupsToName: nil,typeOfContent: .getNews) { [weak self] (cellPresenters, theCap) in
             
             self?.cellPresenters = cellPresenters
            
@@ -68,19 +69,7 @@ class NewsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
        
         if cell.reuseIdentifier! == "NewsCell" {
-            
-            let cellPresenter = self.cellPresenters[indexPath.row]
-            cell.newsText?.text =  self.cellPresenters[indexPath.row].text
-          
-          
-            cellPresenter.cell = cell
-            
-                if let image = cellPresenter.image {
-                    cell.newsFotoOne?.image = image
-                } else {
-                    cellPresenter.downloadImage(completion: {})
-                }
-            
+            self.configure(cell: cell, at: indexPath)
         }
         return cell
     }
@@ -91,6 +80,21 @@ class NewsViewController: UITableViewController {
 
  }
 
-
+extension NewsViewController {
+    
+    func configure(cell: NewsCell, at indexPath: IndexPath) {
+        
+        let cellPresenter = self.cellPresenters[indexPath.row]
+        cell.newsText?.text =  self.cellPresenters[indexPath.row].text
+        
+        cellPresenter.cell = cell
+        
+        if let image = cellPresenter.image {
+            cell.newsFotoOne?.image = image
+        } else {
+            cellPresenter.downloadImage(completion: {})
+        }
+    }
+}
 
 

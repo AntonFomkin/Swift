@@ -64,6 +64,10 @@ class LikeControl: UIControl {
         clipsToBounds = true
     }
 
+    func deselectLike() {
+        isLiked = false
+        setNeedsDisplay()
+    }
     //MARK: Обработка нажатия
     @objc func selectLike() {
         isLiked.toggle()

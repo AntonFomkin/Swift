@@ -13,29 +13,11 @@ import UIKit
 class CurrentFriendController: UICollectionViewController {
    
     var currentFoto: UIImage!
-    var cellPresenters : [CellPresenter] = []
+    
     
     override func viewDidLoad() {
       //  getAllFotoCurrentUser()
-        getDataFromVK(findGroupsToName: nil ,typeOfContent: .getPhotoAlbumCurrentFriend) { [weak self] (cellPresenters,theCap) in
-            
-            self?.cellPresenters = cellPresenters
-            
-            let dispatchGroup = DispatchGroup()
-            for cellPresenter in cellPresenters {
-                dispatchGroup.enter()
-                cellPresenter.downloadImage(completion: {
-                    dispatchGroup.leave()
-                })
-            }
-            
-            dispatchGroup.notify(queue: DispatchQueue.main) {
-                DispatchQueue.main.async {
-                   // self?.tableView?.reloadData()
-                }
-            }
-            
-        }
+
         
     }
     

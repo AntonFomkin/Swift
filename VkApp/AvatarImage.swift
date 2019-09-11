@@ -33,6 +33,7 @@ class AvatarImage: UIControl {
         self.addTarget(self, action: #selector(touchDown), for: .touchDown)
         self.backgroundColor = UIColor.white
         self.avatarImage = UIImageView(frame: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height))
+      //  self.avatarImage.contentMode = .center
         self.addSubview(avatarImage!)
 
     }

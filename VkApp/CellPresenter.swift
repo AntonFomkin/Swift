@@ -17,7 +17,7 @@ class CellPresenter: Equatable {
     let imageURLString: String
     
     var cell: UITableViewCell?
-    
+    lazy var idUser: String? = nil
     var image: UIImage?
     var text : String
     var widthPhoto, heightPhoto : Int

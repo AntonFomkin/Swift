@@ -97,19 +97,6 @@ func getCurrentSession (findGroupsToName: String?,typeOfContent: TypeOfRequest) 
         ]
     case .getPhotoAlbumCurrentFriend:
         urlComponents.path = "/method/photos.getAll"
-       /*
-        urlComponents.queryItems = [
-            URLQueryItem(name: "user_id", value: auth.userId),
-            URLQueryItem(name: "access_token", value: auth.token),
-            URLQueryItem(name: "owner_id", value: "-15571026"),
-            URLQueryItem(name: "extended", value: "0"),
-            URLQueryItem(name: "no_service_albums", value: "0"),
-            URLQueryItem(name: "photo_sizes", value: "0"),
-            URLQueryItem(name: "skip_hidden", value: "1"),
-            URLQueryItem(name: "count", value: "10"),
-            URLQueryItem(name: "v", value: "5.100")
-        ]
-         */
         urlComponents.queryItems = [
             URLQueryItem(name: "user_id", value: auth.userId),
             URLQueryItem(name: "access_token", value: auth.token),
@@ -360,6 +347,53 @@ func parseJSONFriendsVK (for startPoint : [String: AnyObject]?) -> ([CellPresent
     return (cellPresenters,arr)
 }
 
+func parseJSONPhotoCurrentFriend (for startPoint : [String: AnyObject]?) -> [CellPresenter] {
+    
+    var cellPresenters : [CellPresenter] = []
+    let screenWidth = Int(UIScreen.main.bounds.width)
+    let responce = startPoint?["response"] as? [String: AnyObject]
+    let arrItems = responce?["items"] as? [AnyObject]
+    
+   guard let _ = responce, let _ = arrItems else {return cellPresenters}
+    
+    for valueItem in arrItems!  {
+        
+        var widthFoto : Int = 0
+        var heightFoto : Int = 0
+        var urlFoto : String = ""
+        let valueItem  = valueItem as! [String: Any]
+      /*
+        if  valueItem["text"] == nil {continue}
+        let textNews = valueItem["text"] as! String
+        if textNews == "" {continue}
+      */
+        
+        if !valueItem.keys.contains("sizes") {continue}
+        
+        let arrAttachments = valueItem["sizes"] as! [AnyObject]
+        
+        for valueAtt in arrAttachments {
+            let valueAtt = valueAtt as! [String: Any]
+
+            let uFoto = valueAtt["url"] as! String
+            let wFoto = valueAtt["width"] as! Int
+            let hFoto = valueAtt["height"] as! Int
+           
+            if wFoto <= screenWidth {
+                if wFoto > widthFoto {
+                    widthFoto = wFoto
+                    heightFoto = hFoto
+                    urlFoto = uFoto
+                }
+            }
+        }
+                let cellPresenter = CellPresenter(text: "",widthPhoto: widthFoto, heightPhoto: heightFoto, imageURLString: urlFoto)
+                cellPresenters.append(cellPresenter)
+    }
+    
+    return cellPresenters
+}
+
 
 func getDataFromVK (findGroupsToName: String?, typeOfContent: TypeOfRequest, completionBlock: @escaping ([CellPresenter],[UsersVK]) -> ()) {
     
@@ -390,12 +424,12 @@ func getDataFromVK (findGroupsToName: String?, typeOfContent: TypeOfRequest, com
     
     let requestTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
         guard let data = data, error == nil else { return }
-        //print("REQUEST = \(request)")
+        print("REQUEST = \(request)")
         DispatchQueue.global().async() {
             
             let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
             let startPoint = json as? [String: AnyObject]
-            //print(json!)
+            print(json!)
             switch typeOfContent {
                 
             case .getFriends:
@@ -414,7 +448,7 @@ func getDataFromVK (findGroupsToName: String?, typeOfContent: TypeOfRequest, com
                 cellPresenters = parseJSONNewsVK(for: startPoint)
                 
             case .getPhotoAlbumCurrentFriend:
-                print("Заглушка")
+                cellPresenters = parseJSONPhotoCurrentFriend(for: startPoint)
                 
             } //switchEnd
             

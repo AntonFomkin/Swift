@@ -9,7 +9,7 @@
 import UIKit
 
 class LettersPicker: UIControl {
- 
+    @IBOutlet weak var tableView: UITableView!
     var selectedLetter: Character? = nil {
         didSet {
             self.updateSelectedLetter()
@@ -46,55 +46,75 @@ class LettersPicker: UIControl {
     }
     
     func setupView(isSearch : Bool) {
-
-        if (isSearch) {
-        } else {
-            firstLetter()
-          }
-
-        buttons = []
-        if stackView != nil {
-            stackView.removeFromSuperview()
+        
+        DispatchQueue.global().async {
+            if (isSearch) {
+            } else {
+                self.firstLetter()
+            }
+            
+            self.buttons = []
+            
+            DispatchQueue.main.async {
+                if self.stackView != nil {
+                    self.stackView.removeFromSuperview()
+                }
+                
+                for (_ , value ) in arrayFirstLetters.enumerated() {
+                    
+                    let button = UIButton(type: .system)
+                    button.setTitle(String(value!), for: .normal)
+                    button.setTitleColor(UIColor(red: 56.0/255, green: 54.0/255, blue: 152.0/255, alpha: 1.0), for: .normal)
+                    button.setTitleColor(.white, for: .selected)
+                    button.addTarget(self, action: #selector(self.selectLetters(_:)), for: .touchUpInside)
+                    self.buttons.append(button)
+                }
+                
+                self.stackView = UIStackView(arrangedSubviews: self.buttons)
+                self.addSubview(self.stackView)
+                
+                self.stackView.spacing = 8
+                self.stackView.axis = .vertical
+                self.stackView.alignment = .center
+                self.stackView.distribution = .fillEqually
+            }
         }
-        
-        for (_ , value ) in arrayFirstLetters.enumerated() {
-           
-            let button = UIButton(type: .system)
-            button.setTitle(String(value!), for: .normal)
-            button.setTitleColor(.blue, for: .normal)
-            button.setTitleColor(.white, for: .selected)
-            button.addTarget(self, action: #selector(selectLetters(_:)), for: .touchUpInside)
-            self.buttons.append(button)
-        }
-        
-        stackView = UIStackView(arrangedSubviews: self.buttons)
-        self.addSubview(stackView)
-        
-        stackView.spacing = 8
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.distribution = .fillEqually
     }
     
     
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        stackView.frame = bounds
-    }
-
-    private func updateSelectedLetter() {
-        for (index, button) in self.buttons.enumerated() {
-            guard let letter : Character = arrayFirstLetters[index] else { continue }
-            button.isSelected = letter == self.selectedLetter
+        DispatchQueue.main.async {
+            self.stackView.frame = self.bounds
         }
     }
-  
+    
+    private func updateSelectedLetter() {
+        DispatchQueue.global().async {
+            
+            for (index, button) in self.buttons.enumerated() {
+                guard let letter : Character = arrayFirstLetters[index] else { continue }
+                DispatchQueue.main.async {
+                    button.isSelected = letter == self.selectedLetter
+                }
+            }
+        }
+    }
+    
     @objc private func selectLetters(_ sender: UIButton) {
-        guard let index = self.buttons.firstIndex(of: sender) else { return }  /* index */
-        guard let letter : Character = arrayFirstLetters[index] else { return }
-        self.selectedLetter = letter
-        myIndexPath.section = index
-        selectTableView?.scrollToRow(at: myIndexPath, at: .bottom, animated: true)
+        DispatchQueue.global().async {
+            
+            guard let index = self.buttons.firstIndex(of: sender) else { return }  /* index */
+            guard let letter : Character = arrayFirstLetters[index] else { return }
+            
+            myIndexPath.section = index
+            myIndexPath.row = 0
+            DispatchQueue.main.async {
+                self.selectedLetter = letter
+                self.tableView.scrollToRow(at: myIndexPath, at: .middle, animated: true)
+            }
+        }
     }
 }
+
+

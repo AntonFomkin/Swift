@@ -9,7 +9,7 @@
 import UIKit
 
 class AvatarImage: UIControl {
-
+    
     var avatarImage : UIImageView!
     
     override init(frame: CGRect) {
@@ -33,9 +33,9 @@ class AvatarImage: UIControl {
         self.addTarget(self, action: #selector(touchDown), for: .touchDown)
         self.backgroundColor = UIColor.white
         self.avatarImage = UIImageView(frame: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height))
-      //  self.avatarImage.contentMode = .center
+        //  self.avatarImage.contentMode = .center
         self.addSubview(avatarImage!)
-
+        
     }
     // MARK: Обработка нажатий
     @objc func touchUp () {
@@ -51,29 +51,36 @@ class AvatarImage: UIControl {
     
     // MARK: Анимация картинки по нажатию
     func imageUpAnimation () {
-        
-        let animation = CABasicAnimation(keyPath: "transform.scale")
-        animation.fromValue = 1
-        animation.toValue = 0.5
-        animation.duration = 0.2
-        animation.fillMode = .forwards
-        animation.isRemovedOnCompletion = false
-        self.avatarImage.layer.add(animation, forKey: nil)
-        animation.isRemovedOnCompletion = true
+        DispatchQueue.global().async {
+            let animation = CABasicAnimation(keyPath: "transform.scale")
+            animation.fromValue = 1
+            animation.toValue = 0.5
+            animation.duration = 0.2
+            animation.fillMode = .forwards
+            animation.isRemovedOnCompletion = false
+            
+            DispatchQueue.main.async {
+                self.avatarImage.layer.add(animation, forKey: nil)
+            }
+            animation.isRemovedOnCompletion = true
+        }
     }
     
     func imageDownSpringsAnimation () {
-        let animation = CASpringAnimation(keyPath: "transform.scale")
-        animation.fromValue = 0.5
-        animation.toValue = 1
-        animation.stiffness = 200
-        animation.mass = 2
-        animation.duration = 1
-        animation.fillMode = .forwards
-        animation.isRemovedOnCompletion = false
-        self.avatarImage.layer.add(animation, forKey: nil)
-        animation.isRemovedOnCompletion = true
+        DispatchQueue.global().async {
+            let animation = CASpringAnimation(keyPath: "transform.scale")
+            animation.fromValue = 0.5
+            animation.toValue = 1
+            animation.stiffness = 200
+            animation.mass = 2
+            animation.duration = 1
+            animation.fillMode = .forwards
+            animation.isRemovedOnCompletion = false
+            
+            DispatchQueue.main.async {
+                self.avatarImage.layer.add(animation, forKey: nil)
+            }
+            animation.isRemovedOnCompletion = true
+        }
     }
-    
-
 }

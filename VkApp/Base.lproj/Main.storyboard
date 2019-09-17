@@ -170,7 +170,7 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nCG-MZ-2aG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
                         <segue destination="3Te-zK-OFQ" kind="relationship" relationship="viewControllers" id="9UB-13-jyA"/>
@@ -246,6 +246,7 @@
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IMZ-dt-5v6">
                                             <rect key="frame" x="94" y="32" width="42" height="20.666666666666671"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -315,6 +316,7 @@
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rXg-hb-IHm">
                                             <rect key="frame" x="94" y="32" width="42" height="20"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -420,6 +422,7 @@
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PBM-2t-CEh">
                                                     <rect key="frame" x="105.66666666666669" y="35" width="72.333333333333314" height="20"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -452,13 +455,16 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="Cej-2Z-ZHE"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="tableView" destination="VIe-uu-Ndq" id="Fjy-wA-vdP"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.64335519630000004" green="0.69723108720000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="3Dt-zf-ORL" firstAttribute="leading" secondItem="MLc-7h-RcC" secondAttribute="leading" constant="384" id="AQ7-Dw-qZu"/>
                             <constraint firstItem="3Dt-zf-ORL" firstAttribute="top" secondItem="MLc-7h-RcC" secondAttribute="top" constant="60" id="IPk-Ze-in4"/>
                             <constraint firstItem="MLc-7h-RcC" firstAttribute="bottom" secondItem="3Dt-zf-ORL" secondAttribute="bottom" constant="20" id="SSD-dN-3Wl"/>
+                            <constraint firstItem="3Dt-zf-ORL" firstAttribute="trailing" secondItem="MLc-7h-RcC" secondAttribute="trailing" id="YZD-MF-L9O"/>
                             <constraint firstItem="VIe-uu-Ndq" firstAttribute="leading" secondItem="MLc-7h-RcC" secondAttribute="leading" id="g25-Vd-Wfe"/>
                             <constraint firstItem="MLc-7h-RcC" firstAttribute="bottom" secondItem="VIe-uu-Ndq" secondAttribute="bottom" id="jzl-X2-EnD"/>
                             <constraint firstItem="VIe-uu-Ndq" firstAttribute="top" secondItem="MLc-7h-RcC" secondAttribute="top" id="lNb-KR-92O"/>
@@ -502,6 +508,7 @@
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalCompressionResistancePriority="130" verticalCompressionResistancePriority="130" placeholderIntrinsicWidth="128" placeholderIntrinsicHeight="128" image="man2" translatesAutoresizingMaskIntoConstraints="NO" id="ZQU-jM-ivO" customClass="CurrentFriendImage" customModule="VkApp" customModuleProvider="target">
                                             <rect key="frame" x="5" y="5" width="180" height="180"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="180" id="KLM-T8-D5J"/>
                                                 <constraint firstAttribute="height" constant="180" id="XUU-ZO-0sv"/>
@@ -509,6 +516,7 @@
                                         </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j5J-d7-bDJ" customClass="LikeControl" customModule="VkApp" customModuleProvider="target">
                                             <rect key="frame" x="5" y="155" width="30" height="30"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="30" id="ei2-Ph-T1H"/>
                                                 <constraint firstAttribute="width" constant="30" id="oyY-WF-Fxs"/>
@@ -516,6 +524,7 @@
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YCe-Z6-WPV">
                                             <rect key="frame" x="40" y="155" width="30" height="30"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="30" id="1GE-R2-9aa"/>
                                                 <constraint firstAttribute="width" constant="30" id="K2R-52-CKp"/>
@@ -526,6 +535,7 @@
                                         </label>
                                     </subviews>
                                 </view>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="YCe-Z6-WPV" firstAttribute="leading" secondItem="j5J-d7-bDJ" secondAttribute="trailing" constant="5" id="Aeh-KN-oJ0"/>
                                     <constraint firstAttribute="bottom" secondItem="j5J-d7-bDJ" secondAttribute="bottom" constant="5" id="Gqa-tT-M0T"/>

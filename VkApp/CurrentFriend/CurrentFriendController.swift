@@ -13,12 +13,10 @@ import UIKit
 class CurrentFriendController: UICollectionViewController {
    
     var currentFoto: UIImage!
-    
+    var idFriend: String? = nil
     
     override func viewDidLoad() {
       //  getAllFotoCurrentUser()
-
-        
     }
     
     // MARK: Получаем данные через API VK
@@ -67,6 +65,14 @@ class CurrentFriendController: UICollectionViewController {
         
         return cell
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let destinationVC = segue.destination as! FriendPhotoGalleryViewController
+ 
+        destinationVC.idFriend = idFriend
+    }
+    
     
 }
 

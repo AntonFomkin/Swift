@@ -108,7 +108,7 @@ extension VKAuthViewController: WKNavigationDelegate {
         auth.token = token
         auth.userId = idUser!
         userDefaults.set(auth.userId, forKey: "userId")
-        let userId : String? = userDefaults.string(forKey: "userId") as? String
+        let userId : String? = userDefaults.string(forKey: "userId")
         print("userId = \(userId!)")
        
         KeychainWrapper.standard.set(token!, forKey: "myToken")

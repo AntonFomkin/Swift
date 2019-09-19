@@ -15,29 +15,39 @@ class CellPresenter: Equatable {
     }
     
     let imageURLString: String
+    let imageLargeURLString: String?
     
     var cell: UITableViewCell?
-    
+    var idFriend: String?
     var image: UIImage?
+    var imageLarge: UIImage?
     var text : String
     var widthPhoto, heightPhoto : Int
     
-    init(text : String,widthPhoto: Int, heightPhoto : Int, imageURLString : String) {
+    init(idFriend: String, text: String,widthPhoto: Int, heightPhoto: Int, imageURLString: String, imageLargeURLString: String?) {
+        self.idFriend = idFriend
         self.text = text
         self.imageURLString = imageURLString
+        self.imageLargeURLString = imageLargeURLString
         self.widthPhoto = widthPhoto
         self.heightPhoto = heightPhoto
     }
+}
+
+class ImageDownloader {
     
-    func saveFileFromCache(fileName: String,data: Data) {
+    var image: UIImage?
+    let imageURL: String?
+    
+    private func saveFileFromCache(fileName: String,data: Data) {
         let filePath = self.filePath(fileName: fileName)
         if false == FileManager.default.fileExists(atPath: filePath) {
             FileManager.default.createFile(atPath: filePath, contents: data, attributes: nil)
-            print("Создан \(fileName)")
+           // print("Создан \(fileName)")
         }
     }
     
-    func loadFileFromCache(fileName: String) -> Data? {
+    private func loadFileFromCache(fileName: String) -> Data? {
         var data: Data?
         let filePath = self.filePath(fileName: fileName)
         if FileManager.default.fileExists(atPath: filePath) {
@@ -50,29 +60,22 @@ class CellPresenter: Equatable {
     private func filePath(fileName: String) -> String {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
         
-        //let fileName = self.cryptoHelper.stringMD5(string: self.imageURLString)
-        
-        //        let url = URL(string: self.imageURLString)
-        //        let fileName = url?.lastPathComponent ?? "\(index)"
-        //        debugPrint("fileName \(fileName)")
-        
-        //  let fileName = "\(index)"
-        
         let fileURL = cachesDirectory?.appendingPathComponent("\(fileName).png")
         return fileURL?.path ?? ""
     }
     
-    
-    func downloadImage(completion: @escaping () -> ()) {
+    func getImage(completion: @escaping () -> ())  {
         DispatchQueue.global(qos: .utility).async {
-            let url = URL(string: self.imageURLString)!
-            let filename = url.lastPathComponent
+            
+            let url = URL(string: self.imageURL!)
+            guard let _ = url else {return}
+            let filename = url!.lastPathComponent
             
             var image: UIImage?
             if let data = self.loadFileFromCache(fileName: filename) {
                 image = UIImage(data: data)
             } else {
-                let data = try? Data(contentsOf: url)
+                let data = try? Data(contentsOf: url!)
                 
                 if let data = data {
                     image = UIImage(data: data)
@@ -82,9 +85,14 @@ class CellPresenter: Equatable {
             
             DispatchQueue.main.async {
                 self.image = image
-                //          self.cell?.imageView?.image = image
                 completion()
             }
         }
     }
+    init(url: String) {
+        self.imageURL = url
+    }
+    
 }
+
+

@@ -9,7 +9,7 @@
 import UIKit
 
 class ShadowView: UIView {
-
+    
     @IBOutlet weak var friendFoto: AvatarImage!
     
     var redraw : Bool = false {
@@ -25,25 +25,28 @@ class ShadowView: UIView {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-   
-        friendFoto.layer.cornerRadius = friendFoto.avatarImage.frame.height / 2
-        friendFoto.layer.borderWidth = 1
-        friendFoto.layer.borderColor = UIColor.orange.cgColor
-        friendFoto.layer.backgroundColor = colorBackground.cgColor
-        friendFoto.layer.masksToBounds = true 
+        DispatchQueue.main.async {
+            
+            self.friendFoto.layer.cornerRadius = self.friendFoto.avatarImage.frame.height / 2
+            self.friendFoto.layer.borderWidth = 1
+            self.friendFoto.layer.borderColor = UIColor.orange.cgColor
+            self.friendFoto.layer.backgroundColor = self.colorBackground.cgColor
+            self.friendFoto.layer.masksToBounds = true
+        }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let shadowLayer = CAShapeLayer()
-        shadowLayer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: frame.size.height / 2).cgPath
-        shadowLayer.shadowColor = colorShadow.cgColor
-        shadowLayer.shadowRadius = radiusShadow
-        shadowLayer.shadowOpacity = opacityShadow
-        shadowLayer.shadowOffset = CGSize(width: 2, height: 2)
-        layer.insertSublayer(shadowLayer, at: 0)
-        
-        redraw.toggle()
+        DispatchQueue.main.async {
+            let shadowLayer = CAShapeLayer()
+            shadowLayer.shadowPath = UIBezierPath(roundedRect: self.bounds, cornerRadius: ceil(self.frame.size.height / 2)).cgPath
+            shadowLayer.shadowColor = self.colorShadow.cgColor
+            shadowLayer.shadowRadius = self.radiusShadow
+            shadowLayer.shadowOpacity = self.opacityShadow
+            shadowLayer.shadowOffset = CGSize(width: 2, height: 2)
+            self.layer.insertSublayer(shadowLayer, at: 0)
+            
+            self.redraw.toggle()
+        }
     }
 }

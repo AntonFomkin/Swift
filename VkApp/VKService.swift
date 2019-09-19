@@ -36,7 +36,7 @@ enum TypeOfRequest {
     case getPhotoAlbumCurrentFriend
 }
 
-func getCurrentSession (findGroupsToName: String?,typeOfContent: TypeOfRequest) -> (URLSession,URLRequest) {
+func getCurrentSession (idFriend: String?,findGroupsToName: String?,typeOfContent: TypeOfRequest) -> (URLSession,URLRequest) {
     
     let auth = Session.instance
     let configuration = URLSessionConfiguration.default
@@ -64,7 +64,7 @@ func getCurrentSession (findGroupsToName: String?,typeOfContent: TypeOfRequest) 
         urlComponents.queryItems = [
             URLQueryItem(name: "user_id", value: auth.userId),
             URLQueryItem(name: "access_token", value: auth.token),
-            URLQueryItem(name: "fields", value: "domain,photo_200_orig"),
+            URLQueryItem(name: "fields", value: "domain,photo_100,photo_200_orig"),
             URLQueryItem(name: "order", value: "name"),
             URLQueryItem(name: "v", value: "5.100")
         ]
@@ -97,28 +97,15 @@ func getCurrentSession (findGroupsToName: String?,typeOfContent: TypeOfRequest) 
         ]
     case .getPhotoAlbumCurrentFriend:
         urlComponents.path = "/method/photos.getAll"
-       /*
         urlComponents.queryItems = [
             URLQueryItem(name: "user_id", value: auth.userId),
             URLQueryItem(name: "access_token", value: auth.token),
-            URLQueryItem(name: "owner_id", value: "-15571026"),
-            URLQueryItem(name: "extended", value: "0"),
-            URLQueryItem(name: "no_service_albums", value: "0"),
-            URLQueryItem(name: "photo_sizes", value: "0"),
-            URLQueryItem(name: "skip_hidden", value: "1"),
-            URLQueryItem(name: "count", value: "10"),
-            URLQueryItem(name: "v", value: "5.100")
-        ]
-         */
-        urlComponents.queryItems = [
-            URLQueryItem(name: "user_id", value: auth.userId),
-            URLQueryItem(name: "access_token", value: auth.token),
-            URLQueryItem(name: "owner_id", value: "15571026"),
+            URLQueryItem(name: "owner_id", value: idFriend), //"15571026"
             URLQueryItem(name: "extended", value: "0"),
             URLQueryItem(name: "skip_hidden", value: "1"),
             URLQueryItem(name: "no_service_albums", value: "0"),
             URLQueryItem(name: "photo_sizes", value: "0"),
-            URLQueryItem(name: "count", value: "5"),
+     //       URLQueryItem(name: "count", value: "5"),
             URLQueryItem(name: "v", value: "5.101")
         ]
     }
@@ -248,7 +235,7 @@ func parseJSONGroupsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter
          completionBlock(arr);
          }
          */
-        let cellPresenter = CellPresenter(text: groupName,widthPhoto: 0, heightPhoto: 0, imageURLString: urlFoto)
+        let cellPresenter = CellPresenter(idFriend: "", text: groupName,widthPhoto: 0, heightPhoto: 0, imageURLString: urlFoto, imageLargeURLString: nil)
         cellPresenters.append(cellPresenter)
     }
     return cellPresenters
@@ -266,7 +253,7 @@ func parseJSONNewsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter] 
         
         var widthFoto : Int = 0
         var heightFoto : Int = 0
-        var urlFoto : String = ""
+        var urlFoto : String? = nil
         let valueItem  = valueItem as! [String: Any]
         
         if  valueItem["text"] == nil {continue}
@@ -290,6 +277,7 @@ func parseJSONNewsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter] 
                     let uFoto = currentFoto["url"] as! String
                     let wFoto = currentFoto["width"] as! Int
                     let hFoto = currentFoto["height"] as! Int
+                    if wFoto == 0 && hFoto == 0 {continue}
                     
                     if wFoto <= screenWidth {
                         if wFoto > widthFoto {
@@ -299,7 +287,8 @@ func parseJSONNewsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter] 
                         }
                     }
                 }
-                let cellPresenter = CellPresenter(text: textNews,widthPhoto: widthFoto, heightPhoto: heightFoto, imageURLString: urlFoto)
+                guard let urlPhoto = urlFoto else {continue}
+                let cellPresenter = CellPresenter(idFriend: "",text: textNews,widthPhoto: widthFoto, heightPhoto: heightFoto, imageURLString: urlPhoto, imageLargeURLString: nil)
                 cellPresenters.append(cellPresenter)
                 
                 break //arrAttachments
@@ -323,8 +312,9 @@ func parseJSONFriendsVK (for startPoint : [String: AnyObject]?) -> ([CellPresent
         let myUsers  = myUsers as! [String: Any]
         let firstName = myUsers["first_name"] as? String
         let lastName = myUsers["last_name"] as? String
-        /*let fotoUrl = URL(string: myUsers["photo_100"] as! String)*/
-        let urlFoto = myUsers["photo_200_orig"] as! String
+        let idFriend = String(myUsers["id"] as! Int)
+        let urlPhoto = myUsers["photo_100"] as! String
+        let urlLargePhoto = myUsers["photo_200_orig"] as! String
         
         arr.append(UsersVK(name: firstName! + " " + lastName!, foto: nil))
         /*
@@ -352,7 +342,7 @@ func parseJSONFriendsVK (for startPoint : [String: AnyObject]?) -> ([CellPresent
          completionBlock(arr);
          }
          */
-        let cellPresenter = CellPresenter(text: firstName! + " " + lastName!,widthPhoto: 0, heightPhoto: 0, imageURLString: urlFoto)
+        let cellPresenter = CellPresenter(idFriend: idFriend,text: firstName! + " " + lastName!,widthPhoto: 0, heightPhoto: 0, imageURLString: urlPhoto, imageLargeURLString: urlLargePhoto)
         cellPresenters.append(cellPresenter)
         
     }
@@ -360,8 +350,53 @@ func parseJSONFriendsVK (for startPoint : [String: AnyObject]?) -> ([CellPresent
     return (cellPresenters,arr)
 }
 
+func parseJSONPhotoCurrentFriend (for startPoint : [String: AnyObject]?) -> [CellPresenter] {
+    
+    var cellPresenters : [CellPresenter] = []
+    let screenWidth = Int(UIScreen.main.bounds.width)
+    let responce = startPoint?["response"] as? [String: AnyObject]
+    let arrItems = responce?["items"] as? [AnyObject]
+    
+   guard let _ = responce, let _ = arrItems else {return cellPresenters}
+    
+    for valueItem in arrItems!  {
+        
+        var widthFoto : Int = 0
+        var heightFoto : Int = 0
+        var urlFoto : String? = nil
+        let valueItem  = valueItem as! [String: Any]
+  
+        if !valueItem.keys.contains("sizes") {continue}
+        
+        let arrAttachments = valueItem["sizes"] as! [AnyObject]
+        
+        for valueAtt in arrAttachments {
+            let valueAtt = valueAtt as! [String: Any]
 
-func getDataFromVK (findGroupsToName: String?, typeOfContent: TypeOfRequest, completionBlock: @escaping ([CellPresenter],[UsersVK]) -> ()) {
+            let uFoto = valueAtt["url"] as! String
+            let wFoto = valueAtt["width"] as! Int
+            let hFoto = valueAtt["height"] as! Int
+           
+            if wFoto == 0 && hFoto == 0 {continue}
+            
+            if wFoto <= screenWidth {
+                if wFoto > widthFoto {
+                    widthFoto = wFoto
+                    heightFoto = hFoto
+                    urlFoto = uFoto
+                }
+            }
+        }
+        guard let urlPhoto = urlFoto else {continue}
+        let cellPresenter = CellPresenter(idFriend: "",text: "",widthPhoto: widthFoto, heightPhoto: heightFoto, imageURLString: urlPhoto,imageLargeURLString: nil)
+                cellPresenters.append(cellPresenter)
+    }
+    
+    return cellPresenters
+}
+
+
+func getDataFromVK (idFriend: String?,findGroupsToName: String?, typeOfContent: TypeOfRequest, completionBlock: @escaping ([CellPresenter],[UsersVK]) -> ()) {
     
     var arr : [UsersVK] = []
     var cellPresenters : [CellPresenter] = []
@@ -384,13 +419,13 @@ func getDataFromVK (findGroupsToName: String?, typeOfContent: TypeOfRequest, com
      ]
      let request = URLRequest(url: urlComponents.url!)
      */
-    let currentSession = getCurrentSession(findGroupsToName: findGroupsToName, typeOfContent: typeOfContent)
+    let currentSession = getCurrentSession(idFriend: idFriend,findGroupsToName: findGroupsToName, typeOfContent: typeOfContent)
     let session = currentSession.0
     let request = currentSession.1
     
     let requestTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
         guard let data = data, error == nil else { return }
-        //print("REQUEST = \(request)")
+        print("REQUEST = \(request)")
         DispatchQueue.global().async() {
             
             let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
@@ -414,7 +449,7 @@ func getDataFromVK (findGroupsToName: String?, typeOfContent: TypeOfRequest, com
                 cellPresenters = parseJSONNewsVK(for: startPoint)
                 
             case .getPhotoAlbumCurrentFriend:
-                print("Заглушка")
+                cellPresenters = parseJSONPhotoCurrentFriend(for: startPoint)
                 
             } //switchEnd
             

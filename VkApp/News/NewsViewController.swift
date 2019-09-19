@@ -32,14 +32,21 @@ class NewsViewController: UITableViewController {
         tableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier:  NewsCell.reuseId)
         
         /* theCap - просто заглушка */
-        getDataFromVK(findGroupsToName: nil,typeOfContent: .getNews) { [weak self] (cellPresenters, theCap) in
+        getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getNews) { [weak self] (cellPresenters, theCap) in
             
             self?.cellPresenters = cellPresenters
            
             let dispatchGroup = DispatchGroup()
             for cellPresenter in cellPresenters {
                 dispatchGroup.enter()
+                /*
                 cellPresenter.downloadImage(completion: {
+                    dispatchGroup.leave()
+                })
+                 */
+                let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+                imageDownload.getImage (completion: {
+                    cellPresenter.image = imageDownload.image
                     dispatchGroup.leave()
                 })
             }
@@ -92,7 +99,11 @@ extension NewsViewController {
         if let image = cellPresenter.image {
             cell.newsFotoOne?.image = image
         } else {
-            cellPresenter.downloadImage(completion: {})
+           // cellPresenter.downloadImage(completion: {})
+            let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+            imageDownload.getImage (completion: {
+                cellPresenter.image = imageDownload.image
+            })
         }
     }
 }

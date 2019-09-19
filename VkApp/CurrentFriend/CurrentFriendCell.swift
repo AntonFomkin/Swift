@@ -22,27 +22,30 @@ class CurrentFriendCell: UICollectionViewCell {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
+        DispatchQueue.main.async {
+        self.layer.cornerRadius = 25
+        self.layer.borderWidth = 2
+        self.layer.borderColor = UIColor.orange.cgColor
+        self.layer.backgroundColor = UIColor.white.cgColor
+        self.layer.masksToBounds = true
+         
+        self.currentFriendFoto.layer.cornerRadius = self.currentFriendFoto.layer.frame.width / 2
         
-        layer.cornerRadius = 25
-        layer.borderWidth = 2
-        layer.borderColor = UIColor.orange.cgColor
-        layer.backgroundColor = UIColor.white.cgColor
-        layer.masksToBounds = true
-        
-        currentFriendFoto.layer.cornerRadius = currentFriendFoto.layer.frame.width / 2 
-        
-        countLike.text = "0"
-        countLike.textColor = .gray
+        self.countLike.text = "0"
+        self.countLike.textColor = .gray
+        }
     }
     // MARK: Изменяем состояние свойства контрола countLike, по уведомлению нажатия на сердечко
     @objc func likeButtonDidTapped() {
-       
-        if likeButton.isLiked {
-                countLike.text = "1"
-                countLike.textColor = .red
+        DispatchQueue.main.async {
+ 
+        if self.likeButton.isLiked {
+                self.countLike.text = "1"
+                self.countLike.textColor = .red
         }  else {
-                countLike.text = "0"
-                countLike.textColor = .gray
+                self.countLike.text = "0"
+                self.countLike.textColor = .gray
+        }
         }
     }
 }

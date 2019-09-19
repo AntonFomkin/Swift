@@ -24,6 +24,8 @@ class LikeControl: UIControl {
  
     override func draw(_ rect: CGRect) {
         super.draw(rect)
+    
+    
         // MARK: Рисуем сердечко
         let sideOne = rect.height * 0.4
         let sideTwo = rect.height * 0.3
@@ -36,11 +38,12 @@ class LikeControl: UIControl {
         path.addLine(to: CGPoint(x: rect.height * 0.5, y: rect.height * 0.95))
         
         path.close()
-        
+       
         UIColor.gray.setStroke()
         UIColor.gray.setFill()
         // MARK: Запуск анимации по условию
-        if isLiked {
+        if self.isLiked {
+         
             UIColor.red.setStroke()
             UIColor.red.setFill()
             path.fill()
@@ -51,28 +54,34 @@ class LikeControl: UIControl {
             animation.duration = 1
             animation.autoreverses = true
             self.layer.add(animation, forKey: nil)
-            
         } else {
             path.stroke()
         }
+        
     }
         
     private func setupView() {
-        self.addTarget(self, action: #selector(selectLike), for: .touchUpInside)
-        self.backgroundColor = UIColor.white
-        self.layer.cornerRadius = min(self.bounds.height, self.bounds.width) / 5
-        clipsToBounds = true
+        DispatchQueue.main.async {
+            self.addTarget(self, action: #selector(self.selectLike), for: .touchUpInside)
+            self.backgroundColor = UIColor.white
+            self.layer.cornerRadius = min(self.bounds.height, self.bounds.width) / 5
+            self.clipsToBounds = true
+        }
     }
 
     func deselectLike() {
-        isLiked = false
-        setNeedsDisplay()
+       
+        self.isLiked = false
+        self.setNeedsDisplay()
+    
     }
     //MARK: Обработка нажатия
     @objc func selectLike() {
-        isLiked.toggle()
+        
+        self.isLiked.toggle()
         self.sendActions(for: .valueChanged)
-        setNeedsDisplay()
+        self.setNeedsDisplay()
+     
     }
     
 }

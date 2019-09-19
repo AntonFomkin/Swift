@@ -46,14 +46,21 @@ class MyGroupController: UITableViewController {
             typeOfContent = .getGroups
         }
         
-        getDataFromVK(findGroupsToName: searchText,typeOfContent: typeOfContent) { [weak self] (cellPresenters,theCap) in
+        getDataFromVK(idFriend: nil,findGroupsToName: searchText,typeOfContent: typeOfContent) { [weak self] (cellPresenters,theCap) in
             
             self?.cellPresenters = cellPresenters
             
             let dispatchGroup = DispatchGroup()
             for cellPresenter in cellPresenters {
                 dispatchGroup.enter()
+               /*
                 cellPresenter.downloadImage(completion: {
+                    dispatchGroup.leave()
+                })
+                */
+                let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+                imageDownload.getImage (completion: {
+                    cellPresenter.image = imageDownload.image
                     dispatchGroup.leave()
                 })
             }
@@ -199,42 +206,47 @@ class MyGroupController: UITableViewController {
         
         if editingStyle == .delete {
             //  groupList.remove(at: indexPath.row)
-            cellPresenters.remove(at: indexPath.row)
-            tableView.beginUpdates()
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            tableView.reloadData()
-            tableView.endUpdates()
+            DispatchQueue.main.async {
+                self.cellPresenters.remove(at: indexPath.row)
+                tableView.beginUpdates()
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.reloadData()
+                tableView.endUpdates()
+            }
         }
     }
     
     
     // MARK: - Navigation
     @IBAction func addGroup(segue: UIStoryboardSegue) {
-        
-        // Проверяем идентификатор перехода, чтобы убедиться, что это нужный
-        if segue.identifier == "addGroup" {
-            // Получаем ссылку на контроллер, с которого осуществлен переход
-            guard let NewGroupController = segue.source as? NewGroupController else { return }
-            // Получаем индекс выделенной ячейки
-            if let indexPath = NewGroupController.tableView.indexPathForSelectedRow {
-                // Получаем город по индексу
-                let newGroupName = NewGroupController.cellPresentersAddGroup[indexPath.row].text
-                let newGroupFotoURL = NewGroupController.cellPresentersAddGroup[indexPath.row].imageURLString
-                // Проверяем, что такого города нет в списке
-                let newGroup = CellPresenter(text: newGroupName,widthPhoto: 0, heightPhoto: 0, imageURLString: newGroupFotoURL)
-                // GroupVK(name: newGroupName, foto: newGroupFoto)
-                newGroup.image = NewGroupController.cellPresentersAddGroup[indexPath.row].image
-                
-                if !cellPresenters.contains(newGroup) {
-                    cellPresenters.append(newGroup)
-                    tableView.reloadData()
+        DispatchQueue.main.async {
+    
+            // Проверяем идентификатор перехода, чтобы убедиться, что это нужный
+            if segue.identifier == "addGroup" {
+                // Получаем ссылку на контроллер, с которого осуществлен переход
+                guard let NewGroupController = segue.source as? NewGroupController else { return }
+                // Получаем индекс выделенной ячейки
+                if let indexPath = NewGroupController.tableView.indexPathForSelectedRow {
+                    // Получаем город по индексу
+                    let newGroupName = NewGroupController.cellPresentersAddGroup[indexPath.row].text
+                    let newGroupFotoURL = NewGroupController.cellPresentersAddGroup[indexPath.row].imageURLString
+                    // Проверяем, что такого города нет в списке
+                    let newGroup = CellPresenter(idFriend: "", text: newGroupName,widthPhoto: 0, heightPhoto: 0, imageURLString: newGroupFotoURL, imageLargeURLString: nil)
+                    // GroupVK(name: newGroupName, foto: newGroupFoto)
+                    newGroup.image = NewGroupController.cellPresentersAddGroup[indexPath.row].image
+                    
+                    if !self.cellPresenters.contains(newGroup) {
+                        self.cellPresenters.append(newGroup)
+                        self.tableView.reloadData()
+                    }
+                 
+                    /*
+                     if !groupList.contains(newGroup) {
+                     groupList.append(newGroup)
+                     tableView.reloadData()
+                     }
+                     */
                 }
-                /*
-                 if !groupList.contains(newGroup) {
-                 groupList.append(newGroup)
-                 tableView.reloadData()
-                 }
-                 */
             }
         }
     }
@@ -252,22 +264,33 @@ extension MyGroupController: UISearchBarDelegate {
          tableView.reloadData()
          getFindGroups(findText: searchText)
          */
-        searching = true
-        addButton.isEnabled = false
-        self.getData(isSearhing: true,searchText: searchText)
+      //  searching = true
+      //  addButton.isEnabled = false
+       // self.getData(isSearhing: true,searchText: searchText)
       //  tableView.reloadData()
+        if searchText != "" {
+            self.searchContext(isSearh: true, searchText: searchText)
+        } else {
+            self.searchContext(isSearh: false, searchText: nil)
+        }
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
-        searching = false
-        addButton.isEnabled = true
-        searchBar.text = ""
-        self.getData(isSearhing: false,searchText: nil)
+        if searchBar.text != "" {
+            self.searchContext(isSearh: false, searchText: nil)
+            searchBar.text = ""
+        }
     }
 }
 
 extension MyGroupController {
+    
+    func searchContext(isSearh: Bool, searchText: String?) {
+    
+        searching = isSearh
+        addButton.isEnabled = !isSearh
+        self.getData(isSearhing: isSearh,searchText: searchText)
+    }
     
     func configure(cell: MyGroupCell, at indexPath: IndexPath) {
         
@@ -279,7 +302,10 @@ extension MyGroupController {
         if let image = cellPresenter.image {
             cell.groupFoto.avatarImage?.image = image
         } else {
-            cellPresenter.downloadImage(completion: {})
+            let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+            imageDownload.getImage (completion: {
+                cellPresenter.image = imageDownload.image
+            })
         }
         
     }

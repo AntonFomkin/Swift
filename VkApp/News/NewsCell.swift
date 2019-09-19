@@ -7,18 +7,19 @@
 //
 
 import UIKit
+
 var newsRowHeight : CGFloat = 0.0
 
 class NewsCell: UITableViewCell {
-    
+
     static var reuseId: String = "NewsCell"
     var newsTextHeight : CGFloat? = nil
     var likeButtonHeight : CGFloat? = nil
     
     @IBOutlet weak var newsText: UILabel! {
         didSet {
-            if (newsTextHeight == nil) && (likeButtonHeight != nil) {
-                newsTextHeight = self.newsText.frame.height
+            if (self.newsTextHeight == nil) && (self.likeButtonHeight != nil) {
+                self.newsTextHeight = self.newsText.frame.height
                 newsRowHeight = self.newsTextHeight! + self.likeButtonHeight! + UIScreen.main.bounds.width
             }
         }
@@ -48,14 +49,16 @@ class NewsCell: UITableViewCell {
     }
     override func prepareForReuse() {
         super.prepareForReuse()
-        newsText.text = nil
-        newsFotoOne.image = nil
+    
+        self.newsText.text = nil
+        self.newsFotoOne.image = nil
         
-        likeButton.deselectLike()
+        self.likeButton.deselectLike()
         
-        if likeButton.isLiked != true  {
-            countLike?.text = "0"
-            countLike.textColor = .gray
+        if self.likeButton.isLiked != true  {
+            self.countLike?.text = "0"
+            self.countLike?.textColor = .gray
+       
         }
     }
     
@@ -79,27 +82,30 @@ class NewsCell: UITableViewCell {
     
     //MARK: Запуск анимации
     @objc func likeButtonDidTapped() {
-        if likeButton.isLiked {
-            
-            UIView.transition(with: countLike,
-                              duration: 1,
-                              options: .transitionFlipFromLeft,
-                              animations: {
-                                self.countLike.text = "1"
-            })
-            countLike.textColor = .red
-            
-        }  else {
-            
-            UIView.transition(with: countLike,
-                              duration: 1,
-                              options: .transitionFlipFromRight,
-                              animations: {
-                                self.countLike.text = "0"
-            })
-            countLike.textColor = .gray
-        }
         
+        DispatchQueue.main.async {
+     
+            if self.likeButton.isLiked {
+                
+                UIView.transition(with: self.countLike,
+                                  duration: 1,
+                                  options: .transitionFlipFromLeft,
+                                  animations: {
+                                    self.countLike.text = "1"
+                })
+                self.countLike.textColor = .red
+                
+            }  else {
+                
+                UIView.transition(with: self.countLike,
+                                  duration: 1,
+                                  options: .transitionFlipFromRight,
+                                  animations: {
+                                    self.countLike.text = "0"
+                })
+                self.countLike.textColor = .gray
+            }
+        }
     }
-    
+ 
 }

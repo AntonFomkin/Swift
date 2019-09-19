@@ -9,78 +9,147 @@
 import UIKit
 
 class FriendPhotoGalleryViewController: UIViewController {
-
+    
+    
+    @IBOutlet weak var descriptionPhoto: UILabel!
     @IBOutlet weak var displayedPhoto: UIImageView!
     @IBOutlet weak var previousPhoto: UIImageView!
     @IBOutlet weak var nextPhoto: UIImageView!
     var currentIndex : Int = 0
-    var galleryFoto : [FotoCurrentUser] = []
-   /*
-    var galleryFoto : [UIImage] =
-        [
-            UIImage(imageLiteralResourceName: "foto1.png"),
-            UIImage(imageLiteralResourceName: "foto2.png"),
-            UIImage(imageLiteralResourceName: "foto3.png"),
-            UIImage(imageLiteralResourceName: "foto4.png"),
-            UIImage(imageLiteralResourceName: "foto5.png"),
-            UIImage(imageLiteralResourceName: "foto6.png")
-    ]
-   */
+  //  var galleryFoto : [FotoCurrentUser] = []
+    var cellPresenters : [CellPresenter] = []   /*
+     var galleryFoto : [UIImage] =
+     [
+     UIImage(imageLiteralResourceName: "foto1.png"),
+     UIImage(imageLiteralResourceName: "foto2.png"),
+     UIImage(imageLiteralResourceName: "foto3.png"),
+     UIImage(imageLiteralResourceName: "foto4.png"),
+     UIImage(imageLiteralResourceName: "foto5.png"),
+     UIImage(imageLiteralResourceName: "foto6.png")
+     ]
+     */
+    var idFriend: String? = nil
     
     override func viewDidLoad () {
         super.viewDidLoad()
+        /*
+         getCurrentFoto() { [weak self] (galleryFoto) in
+         self?.galleryFoto = galleryFoto
+         self?.displayedPhoto.image = self?.galleryFoto[self?.currentIndex ?? 0].foto
+         self?.setupView()
+         }*/
         
-        getCurrentFoto() { [weak self] (galleryFoto) in
-            self?.galleryFoto = galleryFoto
-            self?.displayedPhoto.image = self?.galleryFoto[self?.currentIndex ?? 0].foto
-            self?.setupView()
-        }
+        descriptionPhoto.isHidden = true
+        
+        getDataFromVK(idFriend: idFriend,findGroupsToName: nil ,typeOfContent: .getPhotoAlbumCurrentFriend) { [weak self] (cellPresenters,theCap) in
+            
+            self?.cellPresenters = cellPresenters
+            
+            let dispatchGroup = DispatchGroup()
+            for cellPresenter in cellPresenters {
+                dispatchGroup.enter()
+               /*
+                cellPresenter.downloadImage(completion: {
+                    dispatchGroup.leave()
+                })
+                */
+                let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+                imageDownload.getImage (completion: {
+                    cellPresenter.image = imageDownload.image
+                    dispatchGroup.leave()
+                    
+                })
+                
+            }
+            
+                dispatchGroup.notify(queue: DispatchQueue.main) {
+                DispatchQueue.main.async {
+                    
+                    if cellPresenters.count > 0 {
+                        let cellPresenter = cellPresenters[(self?.currentIndex)!]
+                        if let image = cellPresenter.image {
+                            self?.displayedPhoto.image = image
+                        } else {
+                            //cellPresenter.downloadImage(completion: {})
+                            let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+                            imageDownload.getImage (completion: {
+                                cellPresenter.image = imageDownload.image
+                            })
+                        }
+                        
+                        self?.setupView()
+                    } else {
+                            self?.descriptionPhoto.isHidden = false
+                            self?.displayedPhoto.center.x *= 2
+                            self?.nextPhoto.center.x *= 2
+                            self?.previousPhoto.center.x *= 2
+                    }
+                        
+                    }
+                }
+            }
+        
     }
-    
+      
     func setupView() {
-        
-        let leftSwipe = UISwipeGestureRecognizer(target : self, action : #selector (swippedLeft( _:)))
-        leftSwipe.direction = .left
-        displayedPhoto.addGestureRecognizer(leftSwipe)
-        
-        let rigthSwipe = UISwipeGestureRecognizer(target : self, action : #selector (swippedRigth( _:)))
-        rigthSwipe.direction = .right
-        displayedPhoto.addGestureRecognizer(rigthSwipe)
-        
-        displayedPhoto.isUserInteractionEnabled = true
+        DispatchQueue.main.async {
+ 
+            let leftSwipe = UISwipeGestureRecognizer(target : self, action : #selector (self.swippedLeft( _:)))
+            leftSwipe.direction = .left
+            self.displayedPhoto.addGestureRecognizer(leftSwipe)
+            
+            let rigthSwipe = UISwipeGestureRecognizer(target : self, action : #selector (self.swippedRigth( _:)))
+            rigthSwipe.direction = .right
+            self.displayedPhoto.addGestureRecognizer(rigthSwipe)
+            
+            self.displayedPhoto.isUserInteractionEnabled = true
+        }
         
     }
     // MARK: Обработчики жестов Swipe
     @objc func swippedLeft(_ gesture : UISwipeGestureRecognizer) {
-        if currentIndex != galleryFoto.count - 1 {
-            previousPhoto.image = nil
-            nextPhoto.image = galleryFoto[currentIndex + 1].foto
-            nextPhoto.center.x += nextPhoto.frame.width
-            
-            UIView.animateKeyframes(withDuration: 1, delay: 0, options: [], animations : {
+        DispatchQueue.main.async {
+ 
+            if self.currentIndex != self.cellPresenters.count - 1 {
+                self.previousPhoto.image = nil
                 
-                UIView.addKeyframe(withRelativeStartTime: 0 , relativeDuration: 1, animations: {
-                    self.displayedPhoto.transform = CGAffineTransform(scaleX : 0.001 , y: 0.001)
-                })
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
-                    self.displayedPhoto.center.x -= 150
-                })
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
-                    self.nextPhoto.transform = CGAffineTransform(scaleX : 1 , y: 1)
-                })
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations : {
-                    self.nextPhoto.center.x -= self.nextPhoto.frame.width
-                })
-            }, completion: { _ in
                 
-                self.currentIndex += 1
-                self.displayedPhoto.transform = .identity
-                self.displayedPhoto.center.x += 150
-                self.nextPhoto.transform = .identity
                 self.nextPhoto.center.x += self.nextPhoto.frame.width
                 
-                self.displayedPhoto.image = self.galleryFoto[self.currentIndex].foto
-            })
+                self.nextPhoto.image = self.configure(currentIndex: self.currentIndex + 1)
+                
+                
+                UIView.animateKeyframes(withDuration: 1, delay: 0, options: [], animations : {
+                    
+                    UIView.addKeyframe(withRelativeStartTime: 0 , relativeDuration: 1, animations: {
+                        self.displayedPhoto.transform = CGAffineTransform(scaleX : 0.001 , y: 0.001)
+                    })
+                    
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
+                        self.displayedPhoto.center.x -= 150
+                    })
+                    
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
+                        self.nextPhoto.transform = CGAffineTransform(scaleX : 1 , y: 1)
+                    })
+                    
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations : {
+                        self.nextPhoto.center.x -= self.nextPhoto.frame.width
+                    })
+                    
+                }, completion: { _ in
+                    
+                    self.currentIndex += 1
+                    self.displayedPhoto.image = self.configure(currentIndex: self.currentIndex)
+                    
+                    self.displayedPhoto.transform = .identity
+                    self.displayedPhoto.center.x += 150
+                    
+                    
+                    self.nextPhoto.transform = .identity
+                    self.nextPhoto.image = nil
+                })
+            }
         }
     }
     
@@ -88,37 +157,57 @@ class FriendPhotoGalleryViewController: UIViewController {
     
     
     @objc func swippedRigth(_ gesture : UISwipeGestureRecognizer) {
-        
-        if currentIndex != 0 {
-            nextPhoto.image = nil
-            previousPhoto.image = galleryFoto[currentIndex - 1].foto
-            previousPhoto.center.x -= previousPhoto.frame.width
+        DispatchQueue.main.async {
             
-            UIView.animateKeyframes(withDuration: 1, delay: 0, options: [], animations : {
+            if self.currentIndex != 0 {
+                self.nextPhoto.image = nil
+                self.previousPhoto.image = self.configure(currentIndex: self.currentIndex - 1)
+                self.previousPhoto.center.x -= self.previousPhoto.frame.width
                 
-                UIView.addKeyframe(withRelativeStartTime: 0 , relativeDuration: 1, animations: {
-                    self.displayedPhoto.transform = CGAffineTransform(scaleX : 0.001 , y: 0.001)
+                UIView.animateKeyframes(withDuration: 1, delay: 0, options: [], animations : {
+                    
+                    UIView.addKeyframe(withRelativeStartTime: 0 , relativeDuration: 1, animations: {
+                        self.displayedPhoto.transform = CGAffineTransform(scaleX : 0.001 , y: 0.001)
+                    })
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
+                        self.displayedPhoto.center.x += 150
+                    })
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
+                        self.previousPhoto.transform = CGAffineTransform(scaleX : 1 , y: 1)
+                    })
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations : {
+                        self.previousPhoto.center.x += self.previousPhoto.frame.width
+                    })
+                }, completion: { _ in
+                    
+                    self.currentIndex -= 1
+                    self.displayedPhoto.image = self.configure(currentIndex: self.currentIndex)
+                    self.displayedPhoto.transform = .identity
+                    self.displayedPhoto.center.x -= 150
+                    self.previousPhoto.transform = .identity
+                    self.previousPhoto.image = nil
                 })
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
-                    self.displayedPhoto.center.x += 150
-                })
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
-                    self.previousPhoto.transform = CGAffineTransform(scaleX : 1 , y: 1)
-                })
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations : {
-                    self.previousPhoto.center.x += self.nextPhoto.frame.width
-                })
-            }, completion: { _ in
-                
-                self.currentIndex -= 1
-                self.displayedPhoto.image = self.galleryFoto[self.currentIndex].foto
-                self.displayedPhoto.transform = .identity
-                self.displayedPhoto.center.x -= 150
-                self.previousPhoto.transform = .identity
-                self.previousPhoto.center.x -= self.nextPhoto.frame.width
-            })
+            }
         }
     }
+}
 
-
+extension FriendPhotoGalleryViewController {
+    
+    func configure (currentIndex: Int) -> UIImage {
+        let cellPresenter = cellPresenters[currentIndex]
+        var photo: UIImage? = nil
+        if let image = cellPresenter.image {
+            photo = image
+        } else {
+            //cellPresenter.downloadImage(completion: {})
+            let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+            imageDownload.getImage (completion: {
+            cellPresenter.image = imageDownload.image
+            })
+        }
+        return photo!
+        
+    }
+    
 }

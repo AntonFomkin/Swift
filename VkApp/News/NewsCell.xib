@@ -18,6 +18,7 @@
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IkD-xQ-E28">
                     <rect key="frame" x="10" y="10" width="360" height="90"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="90" id="fAh-Ma-xVC"/>
                     </constraints>
@@ -27,7 +28,6 @@
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5qj-z2-0Oy" customClass="LikeControl" customModule="VkApp" customModuleProvider="target">
                     <rect key="frame" x="10" y="301" width="40" height="40"/>
-                    <color key="backgroundColor" red="0.48746053960000002" green="0.57283149180000004" blue="0.90116985100000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="B5j-DS-gg1"/>
                         <constraint firstAttribute="width" constant="40" id="vfh-R7-rKa"/>
@@ -35,6 +35,7 @@
                 </view>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="EDD-wO-iPL">
                     <rect key="frame" x="10" y="108" width="360" height="185"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibw-iY-URF">
                     <rect key="frame" x="58" y="311" width="42" height="21"/>

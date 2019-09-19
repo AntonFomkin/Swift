@@ -20,14 +20,20 @@ class NewGroupController: UITableViewController {
     */
     override func viewDidLoad() {
         
-        getDataFromVK(findGroupsToName: nil,typeOfContent: .getSwiftGroup) { [weak self] (cellPresenters,theCap) in
+        getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getSwiftGroup) { [weak self] (cellPresenters,theCap) in
             
             self?.cellPresentersAddGroup = cellPresenters
             
             let dispatchGroup = DispatchGroup()
             for cellPresenter in cellPresenters{
                 dispatchGroup.enter()
+              /*
                 cellPresenter.downloadImage(completion: {
+                    dispatchGroup.leave()
+                })*/
+                let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+                imageDownload.getImage (completion: {
+                    cellPresenter.image = imageDownload.image
                     dispatchGroup.leave()
                 })
             }
@@ -78,7 +84,12 @@ extension NewGroupController {
         if let image = cellPresenter.image {
             cell.newGroupFoto?.avatarImage.image = image
         } else {
-            cellPresenter.downloadImage(completion: {})
+           // cellPresenter.downloadImage(completion: {})
+            let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
+            imageDownload.getImage (completion: {
+                cellPresenter.image = imageDownload.image
+                
+            })
         }
         
     }

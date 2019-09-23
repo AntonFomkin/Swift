@@ -19,18 +19,41 @@ class LettersPicker: UIControl {
     
     private var buttons: [UIButton] = []
     private var stackView: UIStackView!
+    var arrayFirstLetters : [Character?] = []
+    var friendList : [UsersVK] = []
+    var myIndexPath : IndexPath = IndexPath.init(row: 0, section: 0)
+    var section: [Int:Int] = [:]
+    func addToFriendlist(arr: [UsersVK]) {
+        friendList = arr
+    }
+    
+    func addToArrayFirstLetters(newElement: Character?) {
+        arrayFirstLetters.append(newElement)
+    }
+    
+    func clearArrayFirstLetters() {
+        arrayFirstLetters.removeAll()
+    }
+    
+    func calcMyIndexPath(indexPath: IndexPath) {
+        myIndexPath = indexPath
+    }
     
     // MARK: - Создание массива первых букв от фамилии
     func firstLetter() {
-        
-        for (_,values) in friendListTwo.enumerated() {
-            for (index,value) in values.name.enumerated() {
-                if value == " " {
-                    if !arrayFirstLetters.contains(values.name[values.name.index(values.name.startIndex, offsetBy: index+1)]) {
-                        arrayFirstLetters.append(values.name[values.name.index(values.name.startIndex, offsetBy: index+1)])
-                        break
+       DispatchQueue.main.async {
+            for (_,values) in self.friendList.enumerated() {
+                for (index,value) in values.name.enumerated() {
+                    if value == " " {
+                        if !self.arrayFirstLetters.contains(values.name[values.name.index(values.name.startIndex, offsetBy: index+1)]) {
+                            self.arrayFirstLetters.append(values.name[values.name.index(values.name.startIndex, offsetBy: index+1)])
+                            break
+                        }
                     }
                 }
+            }
+            for (index, _) in self.arrayFirstLetters.enumerated() {
+                self.section[index] = self.friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == self.arrayFirstLetters[index]!}).count
             }
         }
     }
@@ -60,7 +83,7 @@ class LettersPicker: UIControl {
                     self.stackView.removeFromSuperview()
                 }
                 
-                for (_ , value ) in arrayFirstLetters.enumerated() {
+                for (_ , value ) in self.arrayFirstLetters.enumerated() {
                     
                     let button = UIButton(type: .system)
                     button.setTitle(String(value!), for: .normal)
@@ -93,7 +116,7 @@ class LettersPicker: UIControl {
         DispatchQueue.global().async {
             
             for (index, button) in self.buttons.enumerated() {
-                guard let letter : Character = arrayFirstLetters[index] else { continue }
+                guard let letter : Character = self.arrayFirstLetters[index] else { continue }
                 DispatchQueue.main.async {
                     button.isSelected = letter == self.selectedLetter
                 }
@@ -105,13 +128,13 @@ class LettersPicker: UIControl {
         DispatchQueue.global().async {
             
             guard let index = self.buttons.firstIndex(of: sender) else { return }  /* index */
-            guard let letter : Character = arrayFirstLetters[index] else { return }
+            guard let letter : Character = self.arrayFirstLetters[index] else { return }
             
-            myIndexPath.section = index
-            myIndexPath.row = 0
+            self.myIndexPath.section = index
+            self.myIndexPath.row = 0
             DispatchQueue.main.async {
                 self.selectedLetter = letter
-                self.tableView.scrollToRow(at: myIndexPath, at: .middle, animated: true)
+                self.tableView.scrollToRow(at: self.myIndexPath, at: .middle, animated: true)
             }
         }
     }

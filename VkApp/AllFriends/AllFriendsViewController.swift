@@ -14,7 +14,7 @@ class RealmFriends: Object {
     @objc dynamic var foto : Data? = nil
 }
 
-var selectedItem : Int = 0
+
 /*
  var friendList : [User] = [
  User(name: "Маша Пронина", foto: UIImage(imageLiteralResourceName: "women1.png")),
@@ -33,9 +33,9 @@ var selectedItem : Int = 0
 
 //let friendList = requestVKUser().sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
 
-var friendListTwo : [UsersVK] = []
-var arrayFirstLetters : [Character?] = []
-var myIndexPath : IndexPath = IndexPath.init(row: 0, section: 0)
+//var friendListTwo : [UsersVK] = []
+
+
 
 class AllFriendsViewController: UIViewController {
     
@@ -43,16 +43,35 @@ class AllFriendsViewController: UIViewController {
     @IBOutlet weak var lettersPicker: LettersPicker!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var friendList : [UsersVK] = []
+    
     //   var searchUser : [UsersVK] = []
     lazy var searchUser: [CellPresenter] = []
-    var searching = false
-    var cellPresenters : [CellPresenter] = []
-    var token: NotificationToken?
-    var getData : Results<RealmFriends>? = nil
-    lazy var currentPhotoFriend: UIImage? = nil
-    lazy var currentNameFriend: String? = nil
-    lazy var idFriend: String? = nil
+    private var searching = false
+    private var cellPresenters : [CellPresenter] = []
+    private var token: NotificationToken?
+    private var getData : Results<RealmFriends>? = nil
+    lazy private var currentPhotoFriend: UIImage? = nil
+    lazy private var currentNameFriend: String? = nil
+    lazy private var idFriend: String? = nil
+    
+    
+    private func arrayFirstLetters() -> [Character?] {
+        return lettersPicker.arrayFirstLetters
+    }
+    
+    private func friendList() -> [UsersVK] {
+        return lettersPicker.friendList
+    }
+    
+    private func myIndexPath() -> IndexPath {
+        return lettersPicker.myIndexPath
+    }
+    
+    private func sectionDict() -> [Int:Int] {
+        return lettersPicker.section
+    }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,14 +82,14 @@ class AllFriendsViewController: UIViewController {
         getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getFriends) { [weak self] (cellPresenters,friendList) in
             
             self?.cellPresenters = cellPresenters
-            self?.friendList = friendList
+            self?.lettersPicker.addToFriendlist(arr: friendList.sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } ) )
             
-            self?.friendList = friendList.sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
+            //   self?.friendList().sorted(by: { $0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] < $1.name [$1.name.index(after: $1.name.firstIndex(of: " ")!)] } )
             
             self?.cellPresenters = cellPresenters.sorted(by: { $0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] < $1.text [$1.text.index(after: $1.text.firstIndex(of: " ")!)] } )
             
-            friendListTwo = self!.friendList
-            arrayFirstLetters = []
+            //  friendListTwo = self!.friendList
+            //         self?.arrayFirstLetters() = []
             self?.lettersPicker.setupView(isSearch: false)
             
             let dispatchGroup = DispatchGroup()
@@ -101,6 +120,7 @@ class AllFriendsViewController: UIViewController {
             }
             
         }
+        
         /*
          // MARK: - Читаем из Realm
          do {
@@ -157,6 +177,8 @@ class AllFriendsViewController: UIViewController {
          print(error)
          }
          */
+        
+        
     }
     
     
@@ -187,32 +209,35 @@ extension AllFriendsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let headerCell = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderCellSectionTableView.reuseId) as! HeaderCellSectionTableView
-        headerCell.nameLetter.text = String(arrayFirstLetters[section]!)
+        
+        headerCell.nameLetter.text = String(arrayFirstLetters()[section]!)
         headerCell.backgroundColor = UIColor.white
         headerCell.nameLetter.textColor = UIColor(red: 29.0, green: 40.0, blue: 161.0, alpha: 1.0)
+        
         return headerCell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return arrayFirstLetters.count
+        return arrayFirstLetters().count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    
+        
         if searching {
-            return self.searchUser.filter({$0.text[$0.text.index(after: $0.text.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
+            return self.searchUser.filter({$0.text[$0.text.index(after: $0.text.firstIndex(of: " ")!)] == arrayFirstLetters()[section]!}).count
         } else {
-            return self.friendList.filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters[section]!}).count
+            return sectionDict()[section]! 
+            //self.friendList().filter({$0.name[ $0.name.index(after: $0.name.firstIndex(of: " ")!)] == arrayFirstLetters()[section]!}).count
         }
     }
-       
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "AllFriendsCell", for: indexPath) as! AllFriendsCell
         
         if searching {
             DispatchQueue.global().async {
-                let friendListForCurrentSection = self.searchUser.filter({$0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] == arrayFirstLetters[indexPath.section]!})
+                let friendListForCurrentSection = self.searchUser.filter({$0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] == self.arrayFirstLetters()[indexPath.section]!})
                 let friend = friendListForCurrentSection[indexPath.row].text
                 let foto = friendListForCurrentSection[indexPath.row].image
                 DispatchQueue.main.async {
@@ -245,12 +270,12 @@ extension AllFriendsViewController: UITableViewDataSource {
             //   cell.friendFoto.avatarImage.image = foto
             
             DispatchQueue.global().async {
-                let cellPresentersForCurrentSection = self.cellPresenters.filter({$0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] == arrayFirstLetters[indexPath.section]!})
+                let cellPresentersForCurrentSection = self.cellPresenters.filter({$0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] == self.arrayFirstLetters()[indexPath.section]!})
                 
-                    DispatchQueue.main.async {
-                        self.configure(cell: cell, at: indexPath, presenters : cellPresentersForCurrentSection )
+                DispatchQueue.main.async {
+                    self.configure(cell: cell, at: indexPath, presenters : cellPresentersForCurrentSection )
                 }
-                myIndexPath = indexPath
+                self.lettersPicker.calcMyIndexPath(indexPath: indexPath)
             }
         }
         return cell
@@ -261,14 +286,14 @@ extension AllFriendsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DispatchQueue.main.async {
-    
-            myIndexPath = indexPath
+            
+            self.lettersPicker.calcMyIndexPath(indexPath: indexPath)
             let cell = tableView.cellForRow(at: indexPath) as! AllFriendsCell
             self.currentNameFriend = cell.friendName.text
             //    currentPhotoFriend = cell.friendFoto.avatarImage.image
             
             
-            let cellPresentersForCurrentSection = self.cellPresenters.filter({$0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] == arrayFirstLetters[indexPath.section]!})
+            let cellPresentersForCurrentSection = self.cellPresenters.filter({$0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] == self.arrayFirstLetters()[indexPath.section]!})
             self.idFriend = cellPresentersForCurrentSection[indexPath.row].idFriend
             self.currentPhotoFriend = cellPresentersForCurrentSection[indexPath.row].imageLarge
             self.performSegue(withIdentifier: "gotoCurrentFriend", sender: nil)
@@ -298,8 +323,8 @@ extension AllFriendsViewController {
     
     func searchContext(isSearch: Bool, searchText: String?) {
         DispatchQueue.global().async {
-            //  searchUser = friendList.filter({$0.name.lowercased().prefix(searchText.count) == searchText.lowercased()})
-            arrayFirstLetters = []
+            
+            self.lettersPicker.clearArrayFirstLetters()
             let srchText: String
             if searchText != nil {
                 srchText = searchText!
@@ -312,8 +337,8 @@ extension AllFriendsViewController {
                 for (index,value) in values.text.enumerated() {
                     
                     if value == " " {
-                        if !arrayFirstLetters.contains(values.text[values.text.index(values.text.startIndex, offsetBy: index+1)]) {
-                            arrayFirstLetters.append(values.text[values.text.index(values.text.startIndex, offsetBy: index+1)])
+                        if !self.arrayFirstLetters().contains(values.text[values.text.index(values.text.startIndex, offsetBy: index+1)]) {
+                            self.lettersPicker.addToArrayFirstLetters(newElement: values.text[values.text.index(values.text.startIndex, offsetBy: index+1)])
                             break
                         }
                     }
@@ -328,7 +353,7 @@ extension AllFriendsViewController {
         }
     }
     
-    func configure(cell: AllFriendsCell, at indexPath: IndexPath, presenters : [CellPresenter]) {
+    private func configure(cell: AllFriendsCell, at indexPath: IndexPath, presenters : [CellPresenter]) {
         
         let cellPresenter = self.cellPresenters[indexPath.row]
         cell.friendName?.text = presenters[indexPath.row].text

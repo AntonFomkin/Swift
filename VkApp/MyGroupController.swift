@@ -27,16 +27,16 @@ class MyGroupController: UITableViewController {
      ]
      */
     
-    var friendList : [UsersVK] = []
-    var groupList : [GroupVK] = []
-    var searchGroup : [GroupVK] = []
-    var searching = false
+    private var friendList : [UsersVK] = []
+    private var groupList : [GroupVK] = []
+    private var searchGroup : [GroupVK] = []
+    private var searching = false
     var cellPresenters : [CellPresenter] = []
     
-    var token: NotificationToken?
-    var getData : Results<RealmGroup>? = nil
+    private var token: NotificationToken?
+    private var getData : Results<RealmGroup>? = nil
     
-    func getData(isSearhing: Bool, searchText: String?) {
+    private func getData(isSearhing: Bool, searchText: String?) {
         
         let typeOfContent: TypeOfRequest
         
@@ -53,11 +53,11 @@ class MyGroupController: UITableViewController {
             let dispatchGroup = DispatchGroup()
             for cellPresenter in cellPresenters {
                 dispatchGroup.enter()
-               /*
-                cellPresenter.downloadImage(completion: {
-                    dispatchGroup.leave()
-                })
-                */
+                /*
+                 cellPresenter.downloadImage(completion: {
+                 dispatchGroup.leave()
+                 })
+                 */
                 let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
                 imageDownload.getImage (completion: {
                     cellPresenter.image = imageDownload.image
@@ -129,35 +129,35 @@ class MyGroupController: UITableViewController {
     }
     
     /*
-    func getFindGroups(findText:String) {
-        
-        let auth = Session.instance
-        let configuration = URLSessionConfiguration.default
-        let session =  URLSession(configuration: configuration)
-        
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "api.vk.com"
-        urlComponents.path = "/method/groups.search"
-        urlComponents.queryItems = [
-            URLQueryItem(name: "user_id", value: auth.userId),
-            URLQueryItem(name: "access_token", value: auth.token),
-            URLQueryItem(name: "q", value: findText),
-            URLQueryItem(name: "v", value: "5.100")
-        ]
-        
-        var request = URLRequest(url: urlComponents.url!)
-        
-        request.httpMethod = "GET"
-        let task = session.dataTask(with: request) { (data, response, error) in
-            
-            let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
-            print("FindGroupJSON = \(json!)")
-        }
-        
-        task.resume()
-    }
-    */
+     func getFindGroups(findText:String) {
+     
+     let auth = Session.instance
+     let configuration = URLSessionConfiguration.default
+     let session =  URLSession(configuration: configuration)
+     
+     var urlComponents = URLComponents()
+     urlComponents.scheme = "https"
+     urlComponents.host = "api.vk.com"
+     urlComponents.path = "/method/groups.search"
+     urlComponents.queryItems = [
+     URLQueryItem(name: "user_id", value: auth.userId),
+     URLQueryItem(name: "access_token", value: auth.token),
+     URLQueryItem(name: "q", value: findText),
+     URLQueryItem(name: "v", value: "5.100")
+     ]
+     
+     var request = URLRequest(url: urlComponents.url!)
+     
+     request.httpMethod = "GET"
+     let task = session.dataTask(with: request) { (data, response, error) in
+     
+     let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+     print("FindGroupJSON = \(json!)")
+     }
+     
+     task.resume()
+     }
+     */
     
     // MARK: - Работаем с табличным представлением
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -220,7 +220,7 @@ class MyGroupController: UITableViewController {
     // MARK: - Navigation
     @IBAction func addGroup(segue: UIStoryboardSegue) {
         DispatchQueue.main.async {
-    
+            
             // Проверяем идентификатор перехода, чтобы убедиться, что это нужный
             if segue.identifier == "addGroup" {
                 // Получаем ссылку на контроллер, с которого осуществлен переход
@@ -239,7 +239,7 @@ class MyGroupController: UITableViewController {
                         self.cellPresenters.append(newGroup)
                         self.tableView.reloadData()
                     }
-                 
+                    
                     /*
                      if !groupList.contains(newGroup) {
                      groupList.append(newGroup)
@@ -264,10 +264,10 @@ extension MyGroupController: UISearchBarDelegate {
          tableView.reloadData()
          getFindGroups(findText: searchText)
          */
-      //  searching = true
-      //  addButton.isEnabled = false
-       // self.getData(isSearhing: true,searchText: searchText)
-      //  tableView.reloadData()
+        //  searching = true
+        //  addButton.isEnabled = false
+        // self.getData(isSearhing: true,searchText: searchText)
+        //  tableView.reloadData()
         if searchText != "" {
             self.searchContext(isSearh: true, searchText: searchText)
         } else {
@@ -286,13 +286,13 @@ extension MyGroupController: UISearchBarDelegate {
 extension MyGroupController {
     
     func searchContext(isSearh: Bool, searchText: String?) {
-    
+        
         searching = isSearh
         addButton.isEnabled = !isSearh
         self.getData(isSearhing: isSearh,searchText: searchText)
     }
     
-    func configure(cell: MyGroupCell, at indexPath: IndexPath) {
+    private func configure(cell: MyGroupCell, at indexPath: IndexPath) {
         
         let cellPresenter = self.cellPresenters[indexPath.row]
         cell.groupName?.text =  self.cellPresenters[indexPath.row].text
@@ -307,7 +307,5 @@ extension MyGroupController {
                 cellPresenter.image = imageDownload.image
             })
         }
-        
     }
-    
 }

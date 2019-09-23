@@ -8,13 +8,14 @@
 
 import UIKit
 
-var newsRowHeight : CGFloat = 0.0
 
-class NewsCell: UITableViewCell {
 
+final class NewsCell: UITableViewCell {
+    
     static var reuseId: String = "NewsCell"
-    var newsTextHeight : CGFloat? = nil
-    var likeButtonHeight : CGFloat? = nil
+    private var newsTextHeight : CGFloat? = nil
+    private var likeButtonHeight : CGFloat? = nil
+    var newsRowHeight : CGFloat = 0.0
     
     @IBOutlet weak var newsText: UILabel! {
         didSet {
@@ -49,7 +50,7 @@ class NewsCell: UITableViewCell {
     }
     override func prepareForReuse() {
         super.prepareForReuse()
-    
+        
         self.newsText.text = nil
         self.newsFotoOne.image = nil
         
@@ -58,7 +59,7 @@ class NewsCell: UITableViewCell {
         if self.likeButton.isLiked != true  {
             self.countLike?.text = "0"
             self.countLike?.textColor = .gray
-       
+            
         }
     }
     
@@ -81,10 +82,10 @@ class NewsCell: UITableViewCell {
     }
     
     //MARK: Запуск анимации
-    @objc func likeButtonDidTapped() {
+    @objc private func likeButtonDidTapped() {
         
         DispatchQueue.main.async {
-     
+            
             if self.likeButton.isLiked {
                 
                 UIView.transition(with: self.countLike,
@@ -107,5 +108,5 @@ class NewsCell: UITableViewCell {
             }
         }
     }
- 
+    
 }

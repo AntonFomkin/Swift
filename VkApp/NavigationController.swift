@@ -8,12 +8,12 @@
 
 import UIKit
 
-class CustomInteractiveTransition : UIPercentDrivenInteractiveTransition {
-    var hasStarted = false
-    var shouldFinish = false
+final class CustomInteractiveTransition : UIPercentDrivenInteractiveTransition {
+   var hasStarted = false
+   var shouldFinish = false
 }
 
-class NavigationController: UINavigationController, UINavigationControllerDelegate {
+final class NavigationController: UINavigationController, UINavigationControllerDelegate {
 
     let transitionAnimator = Animator()
     let interactiveTransition = CustomInteractiveTransition()

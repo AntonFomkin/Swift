@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyTabBar: UITabBarController {
+final class MyTabBar: UITabBarController {
 
     override func viewDidLoad() {
         DispatchQueue.main.async {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyGroupCell: UITableViewCell {
+final class MyGroupCell: UITableViewCell {
 
     static var reuseIdentifier = "MyGroupCell"    
     @IBOutlet weak var groupName: UILabel!

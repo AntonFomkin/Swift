@@ -8,15 +8,15 @@
 
 import UIKit
 
-class Animator : NSObject,UIViewControllerAnimatedTransitioning {
+final class Animator : NSObject,UIViewControllerAnimatedTransitioning {
    
     private let animationDuration : TimeInterval = 1
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    internal func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return animationDuration
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    internal func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
         guard let source = transitionContext.viewController(forKey: .from),
               let destination = transitionContext.viewController(forKey: .to) else { return }
@@ -33,15 +33,15 @@ class Animator : NSObject,UIViewControllerAnimatedTransitioning {
     }
 }
     
-class PushAnimator : NSObject,UIViewControllerAnimatedTransitioning {
+final class PushAnimator : NSObject,UIViewControllerAnimatedTransitioning {
     
     private let animationDuration : TimeInterval = 1
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    internal func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return animationDuration
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    internal func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         DispatchQueue.main.async {
   
             guard let source = transitionContext.viewController(forKey: .from),
@@ -84,15 +84,15 @@ class PushAnimator : NSObject,UIViewControllerAnimatedTransitioning {
 }
 
 
-class PopAnimator : NSObject,UIViewControllerAnimatedTransitioning {
+final class PopAnimator : NSObject,UIViewControllerAnimatedTransitioning {
     
     private let animationDuration : TimeInterval = 1
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    internal func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return animationDuration
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    internal func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         DispatchQueue.main.async {
 
             guard let source = transitionContext.viewController(forKey: .from),

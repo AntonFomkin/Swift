@@ -11,13 +11,13 @@ import UIKit
 class NewGroupController: UITableViewController {
     
     var cellPresentersAddGroup : [CellPresenter] = []
-   /*
-    var newGroupList : [GroupVK] = [
-        GroupVK(name: "Львы", foto: UIImage(imageLiteralResourceName: "lion.png")),
-        GroupVK(name: "Кролики", foto: UIImage(imageLiteralResourceName: "rabbit.png")),
-        GroupVK(name: "Черепахи", foto: UIImage(imageLiteralResourceName: "turtle.png"))
-    ]
-    */
+    /*
+     var newGroupList : [GroupVK] = [
+     GroupVK(name: "Львы", foto: UIImage(imageLiteralResourceName: "lion.png")),
+     GroupVK(name: "Кролики", foto: UIImage(imageLiteralResourceName: "rabbit.png")),
+     GroupVK(name: "Черепахи", foto: UIImage(imageLiteralResourceName: "turtle.png"))
+     ]
+     */
     override func viewDidLoad() {
         
         getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getSwiftGroup) { [weak self] (cellPresenters,theCap) in
@@ -27,10 +27,10 @@ class NewGroupController: UITableViewController {
             let dispatchGroup = DispatchGroup()
             for cellPresenter in cellPresenters{
                 dispatchGroup.enter()
-              /*
-                cellPresenter.downloadImage(completion: {
-                    dispatchGroup.leave()
-                })*/
+                /*
+                 cellPresenter.downloadImage(completion: {
+                 dispatchGroup.leave()
+                 })*/
                 let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
                 imageDownload.getImage (completion: {
                     cellPresenter.image = imageDownload.image
@@ -74,7 +74,7 @@ class NewGroupController: UITableViewController {
 
 extension NewGroupController {
     
-    func configure(cell: NewGroupCell, at indexPath: IndexPath) {
+    private func configure(cell: NewGroupCell, at indexPath: IndexPath) {
         
         let cellPresenter = self.cellPresentersAddGroup[indexPath.row]
         cell.newGroupName?.text =  self.cellPresentersAddGroup[indexPath.row].text
@@ -84,14 +84,12 @@ extension NewGroupController {
         if let image = cellPresenter.image {
             cell.newGroupFoto?.avatarImage.image = image
         } else {
-           // cellPresenter.downloadImage(completion: {})
+            // cellPresenter.downloadImage(completion: {})
             let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
             imageDownload.getImage (completion: {
                 cellPresenter.image = imageDownload.image
                 
             })
         }
-        
     }
-    
 }

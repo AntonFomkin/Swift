@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewGroupCell: UITableViewCell {
+final class NewGroupCell: UITableViewCell {
 
     static var reuseIdentifier = "NewGroupCell"
   

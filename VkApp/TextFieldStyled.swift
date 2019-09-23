@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TextFieldStyled: UITextField {
+final class TextFieldStyled: UITextField {
 
     var redraw : Bool = false {
         didSet {

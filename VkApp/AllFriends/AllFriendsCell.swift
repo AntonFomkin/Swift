@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AllFriendsCell: UITableViewCell {
+final class AllFriendsCell: UITableViewCell {
     
     static var reuseIdentifier = "AllFriendsCell"
     @IBOutlet weak var friendName: UILabel!

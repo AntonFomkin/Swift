@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CircleProgressBar: UIView {
+final class CircleProgressBar: UIView {
  
     override func draw(_ rect: CGRect) {
         super.draw(rect)

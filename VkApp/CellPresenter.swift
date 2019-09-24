@@ -9,20 +9,20 @@
 import Foundation
 import UIKit
 
-class CellPresenter: Equatable {
+final class CellPresenter: Equatable {
     static func == (lhs: CellPresenter, rhs: CellPresenter) -> Bool {
         return lhs.text == rhs.text
     }
     
-    let imageURLString: String
-    let imageLargeURLString: String?
-    
-    var cell: UITableViewCell?
-    var idFriend: String?
-    var image: UIImage?
-    var imageLarge: UIImage?
-    var text : String
-    var widthPhoto, heightPhoto : Int
+   let imageURLString: String
+   let imageLargeURLString: String?
+  
+   var cell: UITableViewCell?
+   var idFriend: String?
+   var image: UIImage?
+   var imageLarge: UIImage?
+   var text : String
+   private var widthPhoto, heightPhoto : Int
     
     init(idFriend: String, text: String,widthPhoto: Int, heightPhoto: Int, imageURLString: String, imageLargeURLString: String?) {
         self.idFriend = idFriend
@@ -34,7 +34,7 @@ class CellPresenter: Equatable {
     }
 }
 
-class ImageDownloader {
+final class ImageDownloader {
     
     var image: UIImage?
     let imageURL: String?

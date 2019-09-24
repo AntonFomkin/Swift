@@ -8,14 +8,14 @@
 
 import UIKit
 
-class FriendPhotoGalleryViewController: UIViewController {
+final class FriendPhotoGalleryViewController: UIViewController {
     
     
     @IBOutlet weak var descriptionPhoto: UILabel!
     @IBOutlet weak var displayedPhoto: UIImageView!
     @IBOutlet weak var previousPhoto: UIImageView!
     @IBOutlet weak var nextPhoto: UIImageView!
-    var currentIndex : Int = 0
+    private var currentIndex : Int = 0
   //  var galleryFoto : [FotoCurrentUser] = []
     var cellPresenters : [CellPresenter] = []   /*
      var galleryFoto : [UIImage] =
@@ -91,7 +91,7 @@ class FriendPhotoGalleryViewController: UIViewController {
         
     }
       
-    func setupView() {
+    private func setupView() {
         DispatchQueue.main.async {
  
             let leftSwipe = UISwipeGestureRecognizer(target : self, action : #selector (self.swippedLeft( _:)))
@@ -107,7 +107,7 @@ class FriendPhotoGalleryViewController: UIViewController {
         
     }
     // MARK: Обработчики жестов Swipe
-    @objc func swippedLeft(_ gesture : UISwipeGestureRecognizer) {
+    @objc private func swippedLeft(_ gesture : UISwipeGestureRecognizer) {
         DispatchQueue.main.async {
  
             if self.currentIndex != self.cellPresenters.count - 1 {
@@ -156,7 +156,7 @@ class FriendPhotoGalleryViewController: UIViewController {
     
     
     
-    @objc func swippedRigth(_ gesture : UISwipeGestureRecognizer) {
+    @objc private func swippedRigth(_ gesture : UISwipeGestureRecognizer) {
         DispatchQueue.main.async {
             
             if self.currentIndex != 0 {
@@ -194,7 +194,7 @@ class FriendPhotoGalleryViewController: UIViewController {
 
 extension FriendPhotoGalleryViewController {
     
-    func configure (currentIndex: Int) -> UIImage {
+    private func configure (currentIndex: Int) -> UIImage {
         let cellPresenter = cellPresenters[currentIndex]
         var photo: UIImage? = nil
         if let image = cellPresenter.image {

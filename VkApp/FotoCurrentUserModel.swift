@@ -8,8 +8,8 @@
 
 import UIKit
 
-class FotoCurrentUser {
-  
+final class FotoCurrentUser {
+    
     var foto : UIImage
     init(foto : UIImage) {
         self.foto = foto

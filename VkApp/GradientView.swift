@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GradientView: UIView {
+final class GradientView: UIView {
 
 
     @IBInspectable var startColor: UIColor = .white {
@@ -67,9 +67,4 @@ class GradientView: UIView {
     func updateEndPoint() {
         self.gradientLayer.endPoint = endPoint
     }
-    
-
-    
-
-
 }

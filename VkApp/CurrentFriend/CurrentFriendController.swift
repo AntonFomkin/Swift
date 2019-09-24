@@ -11,16 +11,12 @@ import UIKit
 
 
 class CurrentFriendController: UICollectionViewController {
-   
+    
     var currentFoto: UIImage!
     var idFriend: String? = nil
     
-    override func viewDidLoad() {
-      //  getAllFotoCurrentUser()
-    }
-    
     // MARK: Получаем данные через API VK
-    func getAllFotoCurrentUser() {
+    private func getAllFotoCurrentUser() {
         
         let auth = Session.instance
         let configuration = URLSessionConfiguration.default
@@ -45,7 +41,6 @@ class CurrentFriendController: UICollectionViewController {
             let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
             print("AllFotoCurrentUserJSON = \(json!)")
         }
-        
         task.resume()
     }
     
@@ -53,7 +48,7 @@ class CurrentFriendController: UICollectionViewController {
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
@@ -69,11 +64,8 @@ class CurrentFriendController: UICollectionViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         let destinationVC = segue.destination as! FriendPhotoGalleryViewController
- 
         destinationVC.idFriend = idFriend
     }
-    
-    
 }
 
 

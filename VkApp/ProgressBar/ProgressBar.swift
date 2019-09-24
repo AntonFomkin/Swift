@@ -8,11 +8,11 @@
 
 import UIKit
 
-class ProgressBar: UIControl {
+final class ProgressBar: UIControl {
     
-    var circleOne : CircleProgressBar!
-    var circleTwo : CircleProgressBar!
-    var circleThree : CircleProgressBar!
+   private var circleOne : CircleProgressBar!
+   private var circleTwo : CircleProgressBar!
+   private var circleThree : CircleProgressBar!
     
     // MARK: Добавляем объекты анимации на View
     override func draw(_ rect: CGRect) {

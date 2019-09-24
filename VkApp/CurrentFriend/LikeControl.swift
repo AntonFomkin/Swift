@@ -8,10 +8,10 @@
 
 import UIKit
 
-class LikeControl: UIControl {
- 
+final class LikeControl: UIControl {
+    
     var isLiked : Bool = false
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupView()
@@ -21,11 +21,11 @@ class LikeControl: UIControl {
         super.init(coder: aDecoder)
         self.setupView()
     }
- 
+    
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-    
-    
+        
+        
         // MARK: Рисуем сердечко
         let sideOne = rect.height * 0.4
         let sideTwo = rect.height * 0.3
@@ -38,12 +38,12 @@ class LikeControl: UIControl {
         path.addLine(to: CGPoint(x: rect.height * 0.5, y: rect.height * 0.95))
         
         path.close()
-       
+        
         UIColor.gray.setStroke()
         UIColor.gray.setFill()
         // MARK: Запуск анимации по условию
         if self.isLiked {
-         
+            
             UIColor.red.setStroke()
             UIColor.red.setFill()
             path.fill()
@@ -59,7 +59,7 @@ class LikeControl: UIControl {
         }
         
     }
-        
+    
     private func setupView() {
         DispatchQueue.main.async {
             self.addTarget(self, action: #selector(self.selectLike), for: .touchUpInside)
@@ -68,22 +68,20 @@ class LikeControl: UIControl {
             self.clipsToBounds = true
         }
     }
-
+    
     func deselectLike() {
-       
+        
         self.isLiked = false
         self.setNeedsDisplay()
-    
+        
     }
     //MARK: Обработка нажатия
-    @objc func selectLike() {
+    @objc private func selectLike() {
         
         self.isLiked.toggle()
         self.sendActions(for: .valueChanged)
         self.setNeedsDisplay()
-     
     }
-    
 }
 
 extension Int {

@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-func getImage(url : URL, completionBlock: @escaping (UIImage) -> ()){
+fileprivate func getImage(url : URL, completionBlock: @escaping (UIImage) -> ()){
     
     let configuration = URLSessionConfiguration.default
     let getFoto =  URLSession(configuration: configuration)
@@ -26,7 +26,7 @@ func getImage(url : URL, completionBlock: @escaping (UIImage) -> ()){
     taskGetFoto.resume()
 }
 
-enum TypeOfRequest {
+ enum TypeOfRequest {
     
     case getGroups
     case getFriends
@@ -36,7 +36,7 @@ enum TypeOfRequest {
     case getPhotoAlbumCurrentFriend
 }
 
-func getCurrentSession (idFriend: String?,findGroupsToName: String?,typeOfContent: TypeOfRequest) -> (URLSession,URLRequest) {
+fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,typeOfContent: TypeOfRequest) -> (URLSession,URLRequest) {
     
     let auth = Session.instance
     let configuration = URLSessionConfiguration.default
@@ -242,7 +242,7 @@ func parseJSONGroupsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter
 }
 
 
-func parseJSONNewsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter] {
+fileprivate func parseJSONNewsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter] {
     
     var cellPresenters : [CellPresenter] = []
     let screenWidth = Int(UIScreen.main.bounds.width)
@@ -300,7 +300,7 @@ func parseJSONNewsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter] 
 }
 
 
-func parseJSONFriendsVK (for startPoint : [String: AnyObject]?) -> ([CellPresenter],[UsersVK]) {
+fileprivate func parseJSONFriendsVK (for startPoint : [String: AnyObject]?) -> ([CellPresenter],[UsersVK]) {
     
     var cellPresenters : [CellPresenter] = []
     var arr : [UsersVK] = []
@@ -350,7 +350,7 @@ func parseJSONFriendsVK (for startPoint : [String: AnyObject]?) -> ([CellPresent
     return (cellPresenters,arr)
 }
 
-func parseJSONPhotoCurrentFriend (for startPoint : [String: AnyObject]?) -> [CellPresenter] {
+fileprivate func parseJSONPhotoCurrentFriend (for startPoint : [String: AnyObject]?) -> [CellPresenter] {
     
     var cellPresenters : [CellPresenter] = []
     let screenWidth = Int(UIScreen.main.bounds.width)
@@ -463,7 +463,7 @@ func getDataFromVK (idFriend: String?,findGroupsToName: String?, typeOfContent: 
     
 }
 
-func getCurrentFoto(completionBlock: @escaping ([FotoCurrentUser]) -> ()) {
+fileprivate func getCurrentFoto(completionBlock: @escaping ([FotoCurrentUser]) -> ()) {
     
     var arr : [FotoCurrentUser] = []
     

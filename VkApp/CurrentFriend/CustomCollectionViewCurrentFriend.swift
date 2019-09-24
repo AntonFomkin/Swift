@@ -8,9 +8,9 @@
 
 import UIKit
 
-class CustomCollectionViewCurrentFriend: UICollectionView {
+final class CustomCollectionViewCurrentFriend: UICollectionView {
 
-    var redraw : Bool = false {
+    private var redraw : Bool = false {
         didSet {
             setNeedsDisplay()
         }

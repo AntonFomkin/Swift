@@ -22,7 +22,7 @@ class Session {
 
 
 class VKAuthViewController: UIViewController {
-
+    
     @IBOutlet weak var webview: WebView! {
         didSet  {
             webview.navigationDelegate = self
@@ -33,23 +33,23 @@ class VKAuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       // logoutVK()
+        // logoutVK()
         authorize()
         
         // MARK: Настройка дизайна Navigator & TabBar
         let navigationBarAppearance = UINavigationBar.appearance()
         navigationBarAppearance.tintColor = UIColor.white
         navigationBarAppearance.barTintColor = UIColor(red: 66.0/255.0, green: 118.0/255.0, blue: 166.0/255.0, alpha: 1.0)
-      
+        
         
         let tabBarAppearance = UITabBar.appearance()
         tabBarAppearance.tintColor = UIColor.white
         tabBarAppearance.barTintColor = UIColor(red: 66.0/255.0, green: 118.0/255.0, blue: 166.0/255.0, alpha: 1.0)
     }
-   
+    
     
     // MARK: Получаем данные через API VK (авторизация)
-    func authorize() {
+    private func authorize() {
         
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
@@ -62,14 +62,14 @@ class VKAuthViewController: UIViewController {
             URLQueryItem(name: "scope", value: "wall,friends,photos"), /*262150, */
             URLQueryItem(name: "response_type", value: "token"),
             URLQueryItem(name: "state", value: "123456")//,
-           // URLQueryItem(name: "revoke", value: "1")
+            // URLQueryItem(name: "revoke", value: "1")
         ]
         
         let request = URLRequest(url: urlComponents.url!)
         webview.load(request)
     }
     
-    func logoutVK() {
+    private func logoutVK() {
         let dataStore = WKWebsiteDataStore.default()
         dataStore.fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
             dataStore.removeData(
@@ -110,7 +110,7 @@ extension VKAuthViewController: WKNavigationDelegate {
         userDefaults.set(auth.userId, forKey: "userId")
         let userId : String? = userDefaults.string(forKey: "userId")
         print("userId = \(userId!)")
-       
+        
         KeychainWrapper.standard.set(token!, forKey: "myToken")
         let myToken : String? = KeychainWrapper.standard.string(forKey: "myToken")
         print("token = \(myToken!)")

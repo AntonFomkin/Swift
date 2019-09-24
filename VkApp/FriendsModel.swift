@@ -9,16 +9,17 @@
 import UIKit
 
 struct User {
-
-    var name : String
-    var foto : UIImage
+    
+    private var name : String
+    private var foto : UIImage
 }
 
 
-class UsersVK {
-
+final class UsersVK {
+    
     var name : String
     var foto : UIImage?
+    
     init(name : String, foto : UIImage?) {
         self.name = name
         self.foto = foto

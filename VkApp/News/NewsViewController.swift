@@ -24,8 +24,9 @@ class NewsViewController: UITableViewController {
         FotoAlbum(imageOne: UIImage(imageLiteralResourceName: "kasp.png"), imageTwo: UIImage(imageLiteralResourceName: "man1.png"))
         ]
      */
+
     private var cellPresenters : [CellPresenter] = []
-    
+    var rowHeight: CGFloat = 0.0
     override func viewDidLoad() {
         super.viewDidLoad()
       
@@ -74,7 +75,8 @@ class NewsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
-       
+        self.rowHeight = cell.newsRowHeight
+
         if cell.reuseIdentifier! == "NewsCell" {
             self.configure(cell: cell, at: indexPath)
         }
@@ -82,14 +84,14 @@ class NewsViewController: UITableViewController {
     }
  
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return newsRowHeight
+        return self.rowHeight
     }
 
  }
 
 extension NewsViewController {
     
-    func configure(cell: NewsCell, at indexPath: IndexPath) {
+    private func configure(cell: NewsCell, at indexPath: IndexPath) {
         
         let cellPresenter = self.cellPresenters[indexPath.row]
         cell.newsText?.text =  self.cellPresenters[indexPath.row].text

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AvatarImage: UIControl {
+final class AvatarImage: UIControl {
     
     var avatarImage : UIImageView!
     
@@ -38,19 +38,19 @@ class AvatarImage: UIControl {
         
     }
     // MARK: Обработка нажатий
-    @objc func touchUp () {
+    @objc private func touchUp () {
         imageDownSpringsAnimation()
         setNeedsDisplay()
     }
     
     
-    @objc func touchDown () {
+    @objc private func touchDown () {
         imageUpAnimation()
         setNeedsDisplay()
     }
     
     // MARK: Анимация картинки по нажатию
-    func imageUpAnimation () {
+    private func imageUpAnimation () {
         DispatchQueue.global().async {
             let animation = CABasicAnimation(keyPath: "transform.scale")
             animation.fromValue = 1
@@ -66,7 +66,7 @@ class AvatarImage: UIControl {
         }
     }
     
-    func imageDownSpringsAnimation () {
+    private func imageDownSpringsAnimation () {
         DispatchQueue.global().async {
             let animation = CASpringAnimation(keyPath: "transform.scale")
             animation.fromValue = 0.5

@@ -9,7 +9,7 @@
 import UIKit
 
 struct Group : Equatable {
-  
+    
     static func == (lhs: Group, rhs: Group ) -> Bool {
         return lhs.name == rhs.name
     }
@@ -18,7 +18,7 @@ struct Group : Equatable {
     var foto : UIImage
 }
 
-class GroupVK : Equatable {
+final class GroupVK : Equatable {
     static func == (lhs: GroupVK, rhs: GroupVK) -> Bool {
         return lhs.name == rhs.name
     }

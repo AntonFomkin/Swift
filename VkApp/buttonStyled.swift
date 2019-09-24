@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ButtonStyled: UIButton {
+final class ButtonStyled: UIButton {
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)

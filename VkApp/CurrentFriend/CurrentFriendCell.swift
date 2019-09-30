@@ -22,29 +22,28 @@ final class CurrentFriendCell: UICollectionViewCell {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        DispatchQueue.main.async {
-            self.layer.cornerRadius = 25
-            self.layer.borderWidth = 2
-            self.layer.borderColor = UIColor.orange.cgColor
-            self.layer.backgroundColor = UIColor.white.cgColor
-            self.layer.masksToBounds = true
+        DispatchQueue.main.async { [weak self] in
+            self?.layer.cornerRadius = 25
+            self?.layer.borderWidth = 2
+            self?.layer.borderColor = UIColor.orange.cgColor
+            self?.layer.masksToBounds = true
             
-            self.currentFriendFoto.layer.cornerRadius = self.currentFriendFoto.layer.frame.width / 2
+            self?.currentFriendFoto.layer.cornerRadius = (self?.currentFriendFoto.layer.frame.width)! / 2
             
-            self.countLike.text = "0"
-            self.countLike.textColor = .gray
+            self?.countLike.text = "0"
+            self?.countLike.textColor = .gray
         }
     }
     // MARK: Изменяем состояние свойства контрола countLike, по уведомлению нажатия на сердечко
     @objc private func likeButtonDidTapped() {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
             
-            if self.likeButton.isLiked {
-                self.countLike.text = "1"
-                self.countLike.textColor = .red
+            if  (self?.likeButton.isLiked)! {
+                self?.countLike.text = "1"
+                self?.countLike.textColor = .red
             }  else {
-                self.countLike.text = "0"
-                self.countLike.textColor = .gray
+                self?.countLike.text = "0"
+                self?.countLike.textColor = .gray
             }
         }
     }

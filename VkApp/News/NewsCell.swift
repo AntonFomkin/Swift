@@ -84,27 +84,27 @@ final class NewsCell: UITableViewCell {
     //MARK: Запуск анимации
     @objc private func likeButtonDidTapped() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
             
-            if self.likeButton.isLiked {
+            if (self?.likeButton.isLiked)! {
                 
-                UIView.transition(with: self.countLike,
+                UIView.transition(with: self!.countLike,
                                   duration: 1,
                                   options: .transitionFlipFromLeft,
                                   animations: {
-                                    self.countLike.text = "1"
+                                    self?.countLike.text = "1"
                 })
-                self.countLike.textColor = .red
+                self?.countLike.textColor = .red
                 
             }  else {
                 
-                UIView.transition(with: self.countLike,
+                UIView.transition(with: self!.countLike,
                                   duration: 1,
                                   options: .transitionFlipFromRight,
                                   animations: {
-                                    self.countLike.text = "0"
+                                    self?.countLike.text = "0"
                 })
-                self.countLike.textColor = .gray
+                self?.countLike.textColor = .gray
             }
         }
     }

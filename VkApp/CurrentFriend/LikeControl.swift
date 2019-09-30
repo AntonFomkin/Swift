@@ -61,11 +61,11 @@ final class LikeControl: UIControl {
     }
     
     private func setupView() {
-        DispatchQueue.main.async {
-            self.addTarget(self, action: #selector(self.selectLike), for: .touchUpInside)
-            self.backgroundColor = UIColor.white
-            self.layer.cornerRadius = min(self.bounds.height, self.bounds.width) / 5
-            self.clipsToBounds = true
+        DispatchQueue.main.async { [weak self] in
+            self?.addTarget(self, action: #selector(self?.selectLike), for: .touchUpInside)
+            self?.backgroundColor = UIColor.clear
+            self?.layer.cornerRadius = min((self?.bounds.height)!, (self?.bounds.width)!) / 5
+            self?.clipsToBounds = true
         }
     }
     

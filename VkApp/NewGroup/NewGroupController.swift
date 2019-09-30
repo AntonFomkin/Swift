@@ -11,13 +11,7 @@ import UIKit
 class NewGroupController: UITableViewController {
     
     var cellPresentersAddGroup : [CellPresenter] = []
-    /*
-     var newGroupList : [GroupVK] = [
-     GroupVK(name: "Львы", foto: UIImage(imageLiteralResourceName: "lion.png")),
-     GroupVK(name: "Кролики", foto: UIImage(imageLiteralResourceName: "rabbit.png")),
-     GroupVK(name: "Черепахи", foto: UIImage(imageLiteralResourceName: "turtle.png"))
-     ]
-     */
+
     override func viewDidLoad() {
         
         getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getSwiftGroup) { [weak self] (cellPresenters,theCap) in
@@ -27,10 +21,7 @@ class NewGroupController: UITableViewController {
             let dispatchGroup = DispatchGroup()
             for cellPresenter in cellPresenters{
                 dispatchGroup.enter()
-                /*
-                 cellPresenter.downloadImage(completion: {
-                 dispatchGroup.leave()
-                 })*/
+      
                 let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
                 imageDownload.getImage (completion: {
                     cellPresenter.image = imageDownload.image
@@ -39,7 +30,7 @@ class NewGroupController: UITableViewController {
             }
             
             dispatchGroup.notify(queue: DispatchQueue.main) {
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
                     self?.tableView?.reloadData()
                 }
             }
@@ -60,12 +51,7 @@ class NewGroupController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier:
             "NewGroupCell", for: indexPath) as! NewGroupCell
-        /*
-         let group = newGroupList[indexPath.row].name
-         let foto = newGroupList[indexPath.row].foto
-         cell.newGroupName.text = group
-         cell.newGroupFoto.avatarImage.image = foto
-         */
+
         self.configure(cell: cell, at: indexPath)
         return cell
     }
@@ -84,7 +70,7 @@ extension NewGroupController {
         if let image = cellPresenter.image {
             cell.newGroupFoto?.avatarImage.image = image
         } else {
-            // cellPresenter.downloadImage(completion: {})
+           
             let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
             imageDownload.getImage (completion: {
                 cellPresenter.image = imageDownload.image

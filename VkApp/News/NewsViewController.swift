@@ -10,21 +10,7 @@ import UIKit
 
 
 class NewsViewController: UITableViewController {
-   /*
-    let textNews : [String] =
-        ["Арт-директор фестиваля — Борис Гребенщиков, собирает в живописном саду в самом центре города разнообразных музыкантов со всего света, которых зачарованно слушают тысячи любителей необычной, душевной, этнической и самой редкой музыки",
-         "Билеты на концерт на Крестовском острове - здесь: https://spb.ponominalu.ru/event/akvarium/03.07/20:00 ",
-         "Гитарист легендарной группы «Кино» сыграл песню для юного музыканта из Калининграда"
-        ]
-    
-    var fotoAlbumNews : [FotoAlbum] =
-        [
-        FotoAlbum(imageOne: UIImage(imageLiteralResourceName: "bg1.png"), imageTwo: UIImage(imageLiteralResourceName: "man1.png")),
-        FotoAlbum(imageOne: UIImage(imageLiteralResourceName: "bg2.png"), imageTwo: UIImage(imageLiteralResourceName: "man1.png")),
-        FotoAlbum(imageOne: UIImage(imageLiteralResourceName: "kasp.png"), imageTwo: UIImage(imageLiteralResourceName: "man1.png"))
-        ]
-     */
-
+ 
     private var cellPresenters : [CellPresenter] = []
     var rowHeight: CGFloat = 0.0
     override func viewDidLoad() {
@@ -40,11 +26,7 @@ class NewsViewController: UITableViewController {
             let dispatchGroup = DispatchGroup()
             for cellPresenter in cellPresenters {
                 dispatchGroup.enter()
-                /*
-                cellPresenter.downloadImage(completion: {
-                    dispatchGroup.leave()
-                })
-                 */
+
                 let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
                 imageDownload.getImage (completion: {
                     cellPresenter.image = imageDownload.image
@@ -53,7 +35,7 @@ class NewsViewController: UITableViewController {
             }
             
             dispatchGroup.notify(queue: DispatchQueue.main) {
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
                     self?.tableView?.reloadData()
                 }
             }
@@ -101,7 +83,7 @@ extension NewsViewController {
         if let image = cellPresenter.image {
             cell.newsFotoOne?.image = image
         } else {
-           // cellPresenter.downloadImage(completion: {})
+         
             let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
             imageDownload.getImage (completion: {
                 cellPresenter.image = imageDownload.image

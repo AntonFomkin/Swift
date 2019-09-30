@@ -25,28 +25,35 @@ class ShadowView: UIView {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        DispatchQueue.main.async {
-            
-            self.friendFoto.layer.cornerRadius = self.friendFoto.avatarImage.frame.height / 2
-            self.friendFoto.layer.borderWidth = 1
-            self.friendFoto.layer.borderColor = UIColor.orange.cgColor
-            self.friendFoto.layer.backgroundColor = self.colorBackground.cgColor
-            self.friendFoto.layer.masksToBounds = true
+        DispatchQueue.main.async { [weak self] in
+         /*
+            if #available(iOS 13.0, *) {
+                self?.backgroundColor = UIColor.clear
+            } else {
+                self?.backgroundColor = UIColor.clear
+            }
+        */
+            self?.backgroundColor = UIColor.clear
+            self?.friendFoto.layer.cornerRadius = (self?.friendFoto.avatarImage.frame.height)! / 2
+            self?.friendFoto.layer.borderWidth = 1
+            self?.friendFoto.layer.borderColor = UIColor.orange.cgColor
+            self?.friendFoto.layer.backgroundColor = self?.colorBackground.cgColor
+            self?.friendFoto.layer.masksToBounds = true
         }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
             let shadowLayer = CAShapeLayer()
-            shadowLayer.shadowPath = UIBezierPath(roundedRect: self.bounds, cornerRadius: ceil(self.frame.size.height / 2)).cgPath
-            shadowLayer.shadowColor = self.colorShadow.cgColor
-            shadowLayer.shadowRadius = self.radiusShadow
-            shadowLayer.shadowOpacity = self.opacityShadow
+            shadowLayer.shadowPath = UIBezierPath(roundedRect: (self?.bounds)!, cornerRadius: ceil((self?.frame.size.height)! / 2)).cgPath
+            shadowLayer.shadowColor = self?.colorShadow.cgColor
+            shadowLayer.shadowRadius = self!.radiusShadow
+            shadowLayer.shadowOpacity = self!.opacityShadow
             shadowLayer.shadowOffset = CGSize(width: 2, height: 2)
-            self.layer.insertSublayer(shadowLayer, at: 0)
+            self?.layer.insertSublayer(shadowLayer, at: 0)
             
-            self.redraw.toggle()
+            self?.redraw.toggle()
         }
     }
 }

@@ -45,6 +45,7 @@ fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,
     var urlComponents = URLComponents()
     urlComponents.scheme = "https"
     urlComponents.host = "api.vk.com"
+    let apiVKVersion = URLQueryItem(name: "v", value: "5.101")
     
     switch typeOfContent {
         
@@ -55,7 +56,7 @@ fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,
             URLQueryItem(name: "user_id", value: auth.userId),
             URLQueryItem(name: "access_token", value: auth.token),
             URLQueryItem(name: "extended", value: "1"),
-            URLQueryItem(name: "v", value: "5.100")
+            apiVKVersion
         ]
         
     case .getFriends:
@@ -66,7 +67,7 @@ fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,
             URLQueryItem(name: "access_token", value: auth.token),
             URLQueryItem(name: "fields", value: "domain,photo_100,photo_200_orig"),
             URLQueryItem(name: "order", value: "name"),
-            URLQueryItem(name: "v", value: "5.100")
+            apiVKVersion
         ]
         
     case .getNews:
@@ -76,7 +77,7 @@ fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,
             URLQueryItem(name: "user_id", value: auth.userId),
             URLQueryItem(name: "access_token", value: auth.token),
             URLQueryItem(name: "filters", value: "post,photo"),
-            URLQueryItem(name: "v", value: "5.100")
+            apiVKVersion
         ]
         
     case .getSwiftGroup:
@@ -85,7 +86,7 @@ fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,
             URLQueryItem(name: "user_id", value: auth.userId),
             URLQueryItem(name: "access_token", value: auth.token),
             URLQueryItem(name: "q", value: "apple swift"),
-            URLQueryItem(name: "v", value: "5.100")
+            apiVKVersion
         ]
     case .getFindGroups:
         urlComponents.path = "/method/groups.search"
@@ -93,7 +94,7 @@ fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,
             URLQueryItem(name: "user_id", value: auth.userId),
             URLQueryItem(name: "access_token", value: auth.token),
             URLQueryItem(name: "q", value: findGroupsToName),
-            URLQueryItem(name: "v", value: "5.100")
+            apiVKVersion
         ]
     case .getPhotoAlbumCurrentFriend:
         urlComponents.path = "/method/photos.getAll"
@@ -105,8 +106,7 @@ fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,
             URLQueryItem(name: "skip_hidden", value: "1"),
             URLQueryItem(name: "no_service_albums", value: "0"),
             URLQueryItem(name: "photo_sizes", value: "0"),
-     //       URLQueryItem(name: "count", value: "5"),
-            URLQueryItem(name: "v", value: "5.101")
+            apiVKVersion
         ]
     }
     
@@ -114,128 +114,25 @@ fileprivate func getCurrentSession (idFriend: String?,findGroupsToName: String?,
     return (session, request)
 }
 
-/*
- func getGroups(completionBlock: @escaping ([CellPresenter]) -> ()) {
- 
- //var arr : [GroupVK] = []
- var cellPresenters: [CellPresenter] = []
- 
- let auth = Session.instance
- 
- let configuration = URLSessionConfiguration.default
- let session =  URLSession(configuration: configuration)
- 
- var urlComponents = URLComponents()
- urlComponents.scheme = "https"
- urlComponents.host = "api.vk.com"
- urlComponents.path = "/method/groups.get"
- urlComponents.queryItems = [
- URLQueryItem(name: "user_id", value: auth.userId),
- URLQueryItem(name: "access_token", value: auth.token),
- URLQueryItem(name: "extended", value: "1"),
- URLQueryItem(name: "v", value: "5.100")
- ]
- let request = URLRequest(url: urlComponents.url!)
- 
- let currentSession = getCurrentSession(typeOfContent: .getGroups)
- let session = currentSession.0
- let request = currentSession.1
- 
- let requestTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
- 
- guard let data = data, error == nil else { return }
- DispatchQueue.global().async() {
- let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
- 
- let startPoint = json as? [String: AnyObject]
- let responce = startPoint?["response"] as? [String: AnyObject]
- let finalObject = responce?["items"] as? [Any]
- 
- for myGroup in finalObject! {
- let myGroup  = myGroup as! [String: Any]
- let groupName = myGroup["name"] as! String
- // let fotoUrl = URL(string: myGroup["photo_100"] as! String)
- let urlFoto = myGroup["photo_100"] as! String
- /*
- getImage(url: fotoUrl!) {  (image) in
- let image : UIImage = image
- arr.append(GroupVK(name: groupName!, foto: image))
- 
- // MARK: - Пишем в Realm
- let obj = RealmGroup()
- obj.name = groupName!
- obj.foto = image.pngData()//! as Data?
- if obj.foto == nil {return}
- do {
- let realm = try Realm()
- //   print(realm.configuration.fileURL)
- try realm.write {
- realm.add(obj)
- }
- 
- 
- } catch {
- print(error)
- }
- 
- completionBlock(arr);
- }
- */
- let cellPresenter = CellPresenter(text: groupName,widthPhoto: 0, heightPhoto: 0, imageURLString: urlFoto)
- cellPresenters.append(cellPresenter)
- 
- DispatchQueue.main.async {
- completionBlock(cellPresenters)
- }
- 
- 
- }
- }
- }
- requestTask.resume()
- }
- */
 
 func parseJSONGroupsVK (for startPoint : [String: AnyObject]?) -> [CellPresenter] {
     
     var cellPresenters : [CellPresenter] = []
     
     let responce = startPoint?["response"] as? [String: AnyObject]
-    let finalObject = responce?["items"] as? [Any]
+    guard responce != nil else { return cellPresenters }
     
+    let finalObject = responce?["items"] as? [Any]
     guard let finalObj = finalObject else { return cellPresenters }
     
     for myGroup in finalObj {
-        let myGroup  = myGroup as! [String: Any]
-        let groupName = myGroup["name"] as! String
-        // let fotoUrl = URL(string: myGroup["photo_100"] as! String)
-        let urlFoto = myGroup["photo_100"] as! String
-        /*
-         getImage(url: fotoUrl!) {  (image) in
-         let image : UIImage = image
-         arr.append(GroupVK(name: groupName!, foto: image))
-         
-         // MARK: - Пишем в Realm
-         let obj = RealmGroup()
-         obj.name = groupName!
-         obj.foto = image.pngData()//! as Data?
-         if obj.foto == nil {return}
-         do {
-         let realm = try Realm()
-         //   print(realm.configuration.fileURL)
-         try realm.write {
-         realm.add(obj)
-         }
-         
-         
-         } catch {
-         print(error)
-         }
-         
-         completionBlock(arr);
-         }
-         */
-        let cellPresenter = CellPresenter(idFriend: "", text: groupName,widthPhoto: 0, heightPhoto: 0, imageURLString: urlFoto, imageLargeURLString: nil)
+        let myGroup  = myGroup as? [String: Any]
+        let groupName = myGroup?["name"] as? String
+        guard groupName != nil else { return cellPresenters }
+        let urlFoto = myGroup?["photo_100"] as? String
+        guard urlFoto != nil else { return cellPresenters }
+ 
+        let cellPresenter = CellPresenter(idFriend: "", text: groupName!,widthPhoto: 0, heightPhoto: 0, imageURLString: urlFoto!, imageLargeURLString: nil)
         cellPresenters.append(cellPresenter)
     }
     return cellPresenters
@@ -247,48 +144,61 @@ fileprivate func parseJSONNewsVK (for startPoint : [String: AnyObject]?) -> [Cel
     var cellPresenters : [CellPresenter] = []
     let screenWidth = Int(UIScreen.main.bounds.width)
     let responce = startPoint?["response"] as? [String: AnyObject]
+    guard responce != nil else { return cellPresenters }
+    
     let arrItems = responce?["items"] as? [AnyObject]
+    guard arrItems != nil else { return cellPresenters }
     
     for valueItem in arrItems!  {
         
         var widthFoto : Int = 0
         var heightFoto : Int = 0
         var urlFoto : String? = nil
-        let valueItem  = valueItem as! [String: Any]
+        let valueItem  = valueItem as? [String: Any]
+        guard valueItem != nil else { return cellPresenters }
         
-        if  valueItem["text"] == nil {continue}
-        let textNews = valueItem["text"] as! String
-        if textNews == "" {continue}
+        if  valueItem?["text"] == nil {continue}
+        let textNews = valueItem?["text"] as? String
+        if  textNews == nil {continue}
+               
+        if  !(valueItem?.keys.contains("attachments"))! {continue}
         
-        if !valueItem.keys.contains("attachments") {continue}
-        
-        let arrAttachments = valueItem["attachments"] as! [AnyObject]
+        let arrAttach = valueItem?["attachments"] as? [AnyObject]
+        guard let arrAttachments = arrAttach else { return cellPresenters }
         
         for valueAtt in arrAttachments {
-            let valueAtt = valueAtt as! [String: Any]
-            let typeAtt = valueAtt["type"] as! String
+            let valueAtt = valueAtt as? [String: Any]
+            guard valueAtt != nil else { return cellPresenters }
+            let typeAtt = valueAtt?["type"] as? String
+            guard typeAtt != nil else { return cellPresenters }
             
             if typeAtt == "photo" {
-                let photo = valueAtt["photo"] as! [String: Any]
-                let sizesPhoto = photo["sizes"] as! [AnyObject]
+                let photo = valueAtt?["photo"] as? [String: Any]
+                guard photo != nil else { return cellPresenters }
+            
+                let sizesPh = photo?["sizes"] as? [AnyObject]
+                guard let sizesPhoto = sizesPh else { return cellPresenters }
                 
                 for currentFoto in sizesPhoto {
-                    let currentFoto = currentFoto as! [String: Any]
-                    let uFoto = currentFoto["url"] as! String
-                    let wFoto = currentFoto["width"] as! Int
-                    let hFoto = currentFoto["height"] as! Int
-                    if wFoto == 0 && hFoto == 0 {continue}
+                    let currentFoto = currentFoto as? [String: Any]
+                    guard currentFoto != nil else { return cellPresenters }
+                    let uFoto = currentFoto?["url"] as? String
+                    let wFoto = currentFoto?["width"] as? Int
+                    let hFoto = currentFoto?["height"] as? Int
+                    guard uFoto != nil && wFoto != nil && hFoto != nil  else { return cellPresenters }
                     
-                    if wFoto <= screenWidth {
-                        if wFoto > widthFoto {
-                            widthFoto = wFoto
-                            heightFoto = hFoto
-                            urlFoto = uFoto
+                    if wFoto == 0 && hFoto == 0 {continue}
+                     
+                    if wFoto! <= screenWidth {
+                        if wFoto! > widthFoto {
+                            widthFoto = wFoto!
+                            heightFoto = hFoto!
+                            urlFoto = uFoto!
                         }
                     }
                 }
                 guard let urlPhoto = urlFoto else {continue}
-                let cellPresenter = CellPresenter(idFriend: "",text: textNews,widthPhoto: widthFoto, heightPhoto: heightFoto, imageURLString: urlPhoto, imageLargeURLString: nil)
+                let cellPresenter = CellPresenter(idFriend: "",text: textNews!,widthPhoto: widthFoto, heightPhoto: heightFoto, imageURLString: urlPhoto, imageLargeURLString: nil)
                 cellPresenters.append(cellPresenter)
                 
                 break //arrAttachments
@@ -306,43 +216,29 @@ fileprivate func parseJSONFriendsVK (for startPoint : [String: AnyObject]?) -> (
     var arr : [UsersVK] = []
     
     let responce = startPoint?["response"] as? [String: AnyObject]
-    let finalObject = responce?["items"] as? [Any]
+    guard responce != nil else { return (cellPresenters,arr) }
+    let finalObj = responce?["items"] as? [Any]
+    guard let finalObject = finalObj else { return (cellPresenters,arr) }
   
-    for myUsers in finalObject! {
-        let myUsers  = myUsers as! [String: Any]
-        let firstName = myUsers["first_name"] as? String
-        let lastName = myUsers["last_name"] as? String
-        let idFriend = String(myUsers["id"] as! Int)
-        let urlPhoto = myUsers["photo_100"] as! String
-        let urlLargePhoto = myUsers["photo_200_orig"] as! String
+    for myUsers in finalObject {
+        let myUsers  = myUsers as? [String: Any]
+        guard myUsers != nil else { return (cellPresenters,arr) }
+         
+        let firstName = myUsers?["first_name"] as? String
+        guard firstName != nil else { return (cellPresenters,arr) }
+        let lastName = myUsers?["last_name"] as? String
+        guard lastName != nil else { return (cellPresenters,arr) }
+        let idFriend = myUsers?["id"] as? Int
+        
+        guard idFriend != nil else { return (cellPresenters,arr) }
+        let urlPhoto = myUsers?["photo_100"] as? String
+        guard urlPhoto != nil else { return (cellPresenters,arr) }
+        let urlLargePhoto = myUsers?["photo_200_orig"] as? String
+        guard urlLargePhoto != nil else { return (cellPresenters,arr) }
         
         arr.append(UsersVK(name: firstName! + " " + lastName!, foto: nil))
-        /*
-         getImage(url: fotoUrl!) {  (image) in
-         let image : UIImage = image
-         arr.append(UsersVK(name: firstName! + " " + lastName!, foto: image))
-         /*
-         // MARK: - Пишем в Realm
-         let obj = RealmFriends()
-         obj.name = firstName! + " " + lastName!
-         obj.foto = image.pngData()//! as Data?
-         if obj.foto == nil {return}
-         do {
-         let realm = try Realm()
-         //   print(realm.configuration.fileURL)
-         try realm.write {
-         realm.add(obj)
-         }
-         
-         
-         } catch {
-         print(error)
-         }
-         */
-         completionBlock(arr);
-         }
-         */
-        let cellPresenter = CellPresenter(idFriend: idFriend,text: firstName! + " " + lastName!,widthPhoto: 0, heightPhoto: 0, imageURLString: urlPhoto, imageLargeURLString: urlLargePhoto)
+
+        let cellPresenter = CellPresenter(idFriend: String(idFriend!),text: firstName! + " " + lastName!,widthPhoto: 0, heightPhoto: 0, imageURLString: urlPhoto!, imageLargeURLString: urlLargePhoto)
         cellPresenters.append(cellPresenter)
         
     }
@@ -360,30 +256,34 @@ fileprivate func parseJSONPhotoCurrentFriend (for startPoint : [String: AnyObjec
    guard let _ = responce, let _ = arrItems else {return cellPresenters}
     
     for valueItem in arrItems!  {
-        
+                  
         var widthFoto : Int = 0
         var heightFoto : Int = 0
         var urlFoto : String? = nil
-        let valueItem  = valueItem as! [String: Any]
-  
-        if !valueItem.keys.contains("sizes") {continue}
+        let valueItem  = valueItem as? [String: Any]
+        guard valueItem != nil else { return cellPresenters }
+         
+        if !(valueItem?.keys.contains("sizes"))! {continue}
         
-        let arrAttachments = valueItem["sizes"] as! [AnyObject]
+        let arrAttach = valueItem?["sizes"] as? [AnyObject]
+        guard let arrAttachments = arrAttach else { return cellPresenters }
         
         for valueAtt in arrAttachments {
-            let valueAtt = valueAtt as! [String: Any]
+            let valueAtt = valueAtt as? [String: Any]
+            guard valueAtt != nil else { return cellPresenters }
 
-            let uFoto = valueAtt["url"] as! String
-            let wFoto = valueAtt["width"] as! Int
-            let hFoto = valueAtt["height"] as! Int
-           
+            let uFoto = valueAtt?["url"] as? String
+            let wFoto = valueAtt?["width"] as? Int
+            let hFoto = valueAtt?["height"] as? Int
+            guard uFoto != nil && wFoto != nil && hFoto != nil  else { return cellPresenters }
+            
             if wFoto == 0 && hFoto == 0 {continue}
             
-            if wFoto <= screenWidth {
-                if wFoto > widthFoto {
-                    widthFoto = wFoto
-                    heightFoto = hFoto
-                    urlFoto = uFoto
+            if wFoto! <= screenWidth {
+                if wFoto! > widthFoto {
+                    widthFoto = wFoto!
+                    heightFoto = hFoto!
+                    urlFoto = uFoto!
                 }
             }
         }
@@ -400,37 +300,22 @@ func getDataFromVK (idFriend: String?,findGroupsToName: String?, typeOfContent: 
     
     var arr : [UsersVK] = []
     var cellPresenters : [CellPresenter] = []
-    /*
-     let auth = Session.instance
-     
-     let configuration = URLSessionConfiguration.default
-     let session =  URLSession(configuration: configuration)
-     
-     var urlComponents = URLComponents()
-     urlComponents.scheme = "https"
-     urlComponents.host = "api.vk.com"
-     urlComponents.path = "/method/friends.get"
-     urlComponents.queryItems = [
-     URLQueryItem(name: "user_id", value: auth.userId),
-     URLQueryItem(name: "access_token", value: auth.token),
-     URLQueryItem(name: "fields", value: "domain,photo_100"),
-     URLQueryItem(name: "order", value: "name"),
-     URLQueryItem(name: "v", value: "5.100")
-     ]
-     let request = URLRequest(url: urlComponents.url!)
-     */
+
     let currentSession = getCurrentSession(idFriend: idFriend,findGroupsToName: findGroupsToName, typeOfContent: typeOfContent)
     let session = currentSession.0
     let request = currentSession.1
     
     let requestTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
         guard let data = data, error == nil else { return }
-        print("REQUEST = \(request)")
-        DispatchQueue.global().async() {
+        
+        DispatchQueue.global().async() { 
             
-            let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+            let jsn = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+            guard let json = jsn else { return }
+            
             let startPoint = json as? [String: AnyObject]
-            //print(json!)
+            guard startPoint != nil else { return }
+            
             switch typeOfContent {
                 
             case .getFriends:
@@ -512,92 +397,3 @@ fileprivate func getCurrentFoto(completionBlock: @escaping ([FotoCurrentUser]) -
     
 }
 
-/*
- func getNews(completionBlock: @escaping ([CellPresenter]) -> ()) {
- 
- var cellPresenters: [CellPresenter] = []
- let screenWidth = Int(UIScreen.main.bounds.width)
- 
- let auth = Session.instance
- 
- let configuration = URLSessionConfiguration.default
- let session =  URLSession(configuration: configuration)
- 
- var urlComponents = URLComponents()
- urlComponents.scheme = "https"
- urlComponents.host = "api.vk.com"
- urlComponents.path = "/method/newsfeed.get"
- urlComponents.queryItems = [
- URLQueryItem(name: "user_id", value: auth.userId),
- URLQueryItem(name: "access_token", value: auth.token),
- URLQueryItem(name: "filters", value: "post,photo"),
- URLQueryItem(name: "v", value: "5.100")
- ]
- let request = URLRequest(url: urlComponents.url!)
- 
- let currentSession = getCurrentSession(typeOfContent: .getNews)
- let session = currentSession.0
- let request = currentSession.1
- 
- let requestTask = session.dataTask(with: request)  { (data: Data?, response: URLResponse?, error: Error?)  in
- 
- guard let data = data, error == nil else { return }
- DispatchQueue.global().async() {
- let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
- let startPoint = json as? [String: AnyObject]
- let responce = startPoint?["response"] as? [String: AnyObject]
- let arrItems = responce?["items"] as? [AnyObject]
- 
- for valueItem in arrItems!  {
- 
- var widthFoto : Int = 0
- var heightFoto : Int = 0
- var urlFoto : String = ""
- let valueItem  = valueItem as! [String: Any]
- 
- if  valueItem["text"] == nil {continue}
- let textNews = valueItem["text"] as! String
- if textNews == "" {continue}
- 
- if !valueItem.keys.contains("attachments") {continue}
- 
- let arrAttachments = valueItem["attachments"] as! [AnyObject]
- 
- for valueAtt in arrAttachments {
- let valueAtt = valueAtt as! [String: Any]
- let typeAtt = valueAtt["type"] as! String
- 
- if typeAtt == "photo" {
- let photo = valueAtt["photo"] as! [String: Any]
- let sizesPhoto = photo["sizes"] as! [AnyObject]
- 
- for currentFoto in sizesPhoto {
- let currentFoto = currentFoto as! [String: Any]
- let uFoto = currentFoto["url"] as! String
- let wFoto = currentFoto["width"] as! Int
- let hFoto = currentFoto["height"] as! Int
- 
- if wFoto <= screenWidth {
- if wFoto > widthFoto {
- widthFoto = wFoto
- heightFoto = hFoto
- urlFoto = uFoto
- }
- }
- }
- let cellPresenter = CellPresenter(text: textNews,widthPhoto: widthFoto, heightPhoto: heightFoto, imageURLString: urlFoto)
- cellPresenters.append(cellPresenter)
- 
- DispatchQueue.main.async {
- completionBlock(cellPresenters)
- }
- 
- break //arrAttachments
- }
- }
- }
- }
- }
- requestTask.resume()
- }
- */

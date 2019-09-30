@@ -42,8 +42,8 @@ final class PushAnimator : NSObject,UIViewControllerAnimatedTransitioning {
     }
     
     internal func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        DispatchQueue.main.async {
-  
+        DispatchQueue.main.async { [weak self] in
+            
             guard let source = transitionContext.viewController(forKey: .from),
                 let destination = transitionContext.viewController(forKey: .to) else { return }
             
@@ -54,7 +54,7 @@ final class PushAnimator : NSObject,UIViewControllerAnimatedTransitioning {
             
 
             
-            UIView.animateKeyframes(withDuration: self.animationDuration, delay: 0, options: .calculationModePaced, animations: {
+            UIView.animateKeyframes(withDuration: self!.animationDuration, delay: 0, options: .calculationModePaced, animations: {
                
                 UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.75, animations: {
                     let translation = CGAffineTransform(translationX: -200, y: 0)
@@ -93,8 +93,8 @@ final class PopAnimator : NSObject,UIViewControllerAnimatedTransitioning {
     }
     
     internal func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        DispatchQueue.main.async {
-
+        DispatchQueue.main.async { [weak self] in
+            
             guard let source = transitionContext.viewController(forKey: .from),
                 let destination = transitionContext.viewController(forKey: .to) else { return }
             
@@ -108,7 +108,7 @@ final class PopAnimator : NSObject,UIViewControllerAnimatedTransitioning {
             destination.view.transform = translation.concatenating(scale)
             
             
-            UIView.animateKeyframes(withDuration: self.animationDuration, delay: 0, options: .calculationModePaced, animations: {
+            UIView.animateKeyframes(withDuration: self!.animationDuration, delay: 0, options: .calculationModePaced, animations: {
                 
                 UIView.addKeyframe(withRelativeStartTime: 0.25, relativeDuration: 0.75, animations: {
 

@@ -16,28 +16,13 @@ final class FriendPhotoGalleryViewController: UIViewController {
     @IBOutlet weak var previousPhoto: UIImageView!
     @IBOutlet weak var nextPhoto: UIImageView!
     private var currentIndex : Int = 0
-  //  var galleryFoto : [FotoCurrentUser] = []
-    var cellPresenters : [CellPresenter] = []   /*
-     var galleryFoto : [UIImage] =
-     [
-     UIImage(imageLiteralResourceName: "foto1.png"),
-     UIImage(imageLiteralResourceName: "foto2.png"),
-     UIImage(imageLiteralResourceName: "foto3.png"),
-     UIImage(imageLiteralResourceName: "foto4.png"),
-     UIImage(imageLiteralResourceName: "foto5.png"),
-     UIImage(imageLiteralResourceName: "foto6.png")
-     ]
-     */
+  
+    var cellPresenters : [CellPresenter] = []
+
     var idFriend: String? = nil
     
     override func viewDidLoad () {
         super.viewDidLoad()
-        /*
-         getCurrentFoto() { [weak self] (galleryFoto) in
-         self?.galleryFoto = galleryFoto
-         self?.displayedPhoto.image = self?.galleryFoto[self?.currentIndex ?? 0].foto
-         self?.setupView()
-         }*/
         
         descriptionPhoto.isHidden = true
         
@@ -108,46 +93,40 @@ final class FriendPhotoGalleryViewController: UIViewController {
     }
     // MARK: Обработчики жестов Swipe
     @objc private func swippedLeft(_ gesture : UISwipeGestureRecognizer) {
-        DispatchQueue.main.async {
- 
-            if self.currentIndex != self.cellPresenters.count - 1 {
-                self.previousPhoto.image = nil
-                
-                
-                self.nextPhoto.center.x += self.nextPhoto.frame.width
-                
-                self.nextPhoto.image = self.configure(currentIndex: self.currentIndex + 1)
+        DispatchQueue.main.async { [weak self] in
+            
+            if  self?.currentIndex != (self?.cellPresenters.count)! - 1 {
+                self?.previousPhoto.image = nil
+                self?.nextPhoto.center.x += (self?.nextPhoto.frame.width)!
+                self?.nextPhoto.image = self?.configure(currentIndex: self!.currentIndex + 1)
                 
                 
                 UIView.animateKeyframes(withDuration: 1, delay: 0, options: [], animations : {
                     
                     UIView.addKeyframe(withRelativeStartTime: 0 , relativeDuration: 1, animations: {
-                        self.displayedPhoto.transform = CGAffineTransform(scaleX : 0.001 , y: 0.001)
+                        self?.displayedPhoto.transform = CGAffineTransform(scaleX : 0.001 , y: 0.001)
                     })
                     
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
-                        self.displayedPhoto.center.x -= 150
+                        self?.displayedPhoto.center.x -= 150
                     })
                     
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
-                        self.nextPhoto.transform = CGAffineTransform(scaleX : 1 , y: 1)
+                        self?.nextPhoto.transform = CGAffineTransform(scaleX : 1 , y: 1)
                     })
                     
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations : {
-                        self.nextPhoto.center.x -= self.nextPhoto.frame.width
+                        self?.nextPhoto.center.x -= (self?.nextPhoto.frame.width)!
                     })
                     
                 }, completion: { _ in
                     
-                    self.currentIndex += 1
-                    self.displayedPhoto.image = self.configure(currentIndex: self.currentIndex)
-                    
-                    self.displayedPhoto.transform = .identity
-                    self.displayedPhoto.center.x += 150
-                    
-                    
-                    self.nextPhoto.transform = .identity
-                    self.nextPhoto.image = nil
+                    self?.currentIndex += 1
+                    self?.displayedPhoto.image = self?.configure(currentIndex: self!.currentIndex)
+                    self?.displayedPhoto.transform = .identity
+                    self?.displayedPhoto.center.x += 150
+                    self?.nextPhoto.transform = .identity
+                    self?.nextPhoto.image = nil
                 })
             }
         }
@@ -157,35 +136,35 @@ final class FriendPhotoGalleryViewController: UIViewController {
     
     
     @objc private func swippedRigth(_ gesture : UISwipeGestureRecognizer) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
             
-            if self.currentIndex != 0 {
-                self.nextPhoto.image = nil
-                self.previousPhoto.image = self.configure(currentIndex: self.currentIndex - 1)
-                self.previousPhoto.center.x -= self.previousPhoto.frame.width
+            if  self?.currentIndex != 0 {
+                self?.nextPhoto.image = nil
+                self?.previousPhoto.image = self?.configure(currentIndex: self!.currentIndex - 1)
+                self?.previousPhoto.center.x -= (self?.previousPhoto.frame.width)!
                 
                 UIView.animateKeyframes(withDuration: 1, delay: 0, options: [], animations : {
                     
                     UIView.addKeyframe(withRelativeStartTime: 0 , relativeDuration: 1, animations: {
-                        self.displayedPhoto.transform = CGAffineTransform(scaleX : 0.001 , y: 0.001)
+                        self?.displayedPhoto.transform = CGAffineTransform(scaleX : 0.001 , y: 0.001)
                     })
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
-                        self.displayedPhoto.center.x += 150
+                        self?.displayedPhoto.center.x += 150
                     })
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1,  animations : {
-                        self.previousPhoto.transform = CGAffineTransform(scaleX : 1 , y: 1)
+                        self?.previousPhoto.transform = CGAffineTransform(scaleX : 1 , y: 1)
                     })
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations : {
-                        self.previousPhoto.center.x += self.previousPhoto.frame.width
+                        self?.previousPhoto.center.x += (self?.previousPhoto.frame.width)!
                     })
                 }, completion: { _ in
                     
-                    self.currentIndex -= 1
-                    self.displayedPhoto.image = self.configure(currentIndex: self.currentIndex)
-                    self.displayedPhoto.transform = .identity
-                    self.displayedPhoto.center.x -= 150
-                    self.previousPhoto.transform = .identity
-                    self.previousPhoto.image = nil
+                    self?.currentIndex -= 1
+                    self?.displayedPhoto.image = self?.configure(currentIndex: self!.currentIndex)
+                    self?.displayedPhoto.transform = .identity
+                    self?.displayedPhoto.center.x -= 150
+                    self?.previousPhoto.transform = .identity
+                    self?.previousPhoto.image = nil
                 })
             }
         }
@@ -200,7 +179,6 @@ extension FriendPhotoGalleryViewController {
         if let image = cellPresenter.image {
             photo = image
         } else {
-            //cellPresenter.downloadImage(completion: {})
             let imageDownload = ImageDownloader(url: cellPresenter.imageURLString)
             imageDownload.getImage (completion: {
             cellPresenter.image = imageDownload.image

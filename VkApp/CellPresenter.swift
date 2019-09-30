@@ -65,26 +65,26 @@ final class ImageDownloader {
     }
     
     func getImage(completion: @escaping () -> ())  {
-        DispatchQueue.global(qos: .utility).async {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
             
-            let url = URL(string: self.imageURL!)
+            let url = URL(string: (self?.imageURL!)!)
             guard let _ = url else {return}
             let filename = url!.lastPathComponent
             
             var image: UIImage?
-            if let data = self.loadFileFromCache(fileName: filename) {
+            if let data = self?.loadFileFromCache(fileName: filename) {
                 image = UIImage(data: data)
             } else {
                 let data = try? Data(contentsOf: url!)
                 
                 if let data = data {
                     image = UIImage(data: data)
-                    self.saveFileFromCache(fileName: filename, data: data)
+                    self?.saveFileFromCache(fileName: filename, data: data)
                 }
             }
             
-            DispatchQueue.main.async {
-                self.image = image
+            DispatchQueue.main.async { [weak self] in
+                self?.image = image
                 completion()
             }
         }

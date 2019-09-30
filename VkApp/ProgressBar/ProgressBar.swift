@@ -17,28 +17,30 @@ final class ProgressBar: UIControl {
     // MARK: Добавляем объекты анимации на View
     override func draw(_ rect: CGRect) {
         // Мне необходимо, чтобы анимация продолжала работать и после переиспользования ячейки
-        DispatchQueue.main.async {
-            if self.circleOne != nil { self.circleOne.removeFromSuperview()}
+        DispatchQueue.main.async { [weak self] in
+
+            if self?.circleOne != nil { self?.circleOne.removeFromSuperview()}
             
-            self.circleOne = CircleProgressBar(frame: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height))
-            self.addSubview(self.circleOne)
+            self?.circleOne = CircleProgressBar(frame: CGRect(x: 0, y: 0, width: self!.frame.height, height: self!.frame.height))
+            self?.addSubview(self!.circleOne)
             
-            if self.circleTwo != nil { self.circleTwo.removeFromSuperview() }
+            if self?.circleTwo != nil { self?.circleTwo.removeFromSuperview() }
             
-            self.circleTwo = CircleProgressBar(frame: CGRect(x: (self.frame.width / 2) - (self.frame.height / 2) , y: 0,  width: self.frame.height, height: self.frame.height))
-            self.addSubview(self.circleTwo)
+            self?.circleTwo = CircleProgressBar(frame: CGRect(x: (self!.frame.width / 2) - ((self!.frame.height) / 2) , y: 0,  width: (self!.frame.height), height: (self!.frame.height)))
+            self?.addSubview(self!.circleTwo)
             
-            if self.circleThree != nil { self.circleThree.removeFromSuperview()}
+            if self?.circleThree != nil { self?.circleThree.removeFromSuperview()}
             
-            self.circleThree = CircleProgressBar(frame: CGRect(x: self.frame.width - self.frame.height , y: 0, width: self.frame.height, height: self.frame.height))
-            self.addSubview(self.circleThree)
+            self?.circleThree = CircleProgressBar(frame: CGRect(x: self!.frame.width - self!.frame.height , y: 0, width: self!.frame.height, height: self!.frame.height))
+            self?.addSubview(self!.circleThree)
         }
     }
     
     // MARK: Запуск анимаций
     override func layoutSubviews() {
         super.layoutSubviews()
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
+
             let animation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
             animation.beginTime = CACurrentMediaTime()
             animation.fromValue = 1
@@ -48,15 +50,15 @@ final class ProgressBar: UIControl {
             animation.autoreverses = true
             
             DispatchQueue.main.async {
-                if self.circleOne != nil { self.circleOne.layer.add(animation, forKey: nil) }
+                if self?.circleOne != nil { self?.circleOne.layer.add(animation, forKey: nil) }
                 
                 let animation2 = animation
                 animation2.beginTime = CACurrentMediaTime() + 0.33
-                if self.circleTwo != nil { self.circleTwo.layer.add(animation2, forKey: nil) }
+                if self?.circleTwo != nil { self?.circleTwo.layer.add(animation2, forKey: nil) }
                 
                 let animation3 = animation
                 animation2.beginTime = CACurrentMediaTime() + 0.66
-                if self.circleThree != nil { self.circleThree.layer.add(animation3, forKey: nil) }
+                if self?.circleThree != nil { self?.circleThree.layer.add(animation3, forKey: nil) }
             }
         }
     }

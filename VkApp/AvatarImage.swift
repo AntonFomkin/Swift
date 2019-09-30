@@ -33,7 +33,6 @@ final class AvatarImage: UIControl {
         self.addTarget(self, action: #selector(touchDown), for: .touchDown)
         self.backgroundColor = UIColor.white
         self.avatarImage = UIImageView(frame: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height))
-        //  self.avatarImage.contentMode = .center
         self.addSubview(avatarImage!)
         
     }
@@ -51,7 +50,8 @@ final class AvatarImage: UIControl {
     
     // MARK: Анимация картинки по нажатию
     private func imageUpAnimation () {
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
+            
             let animation = CABasicAnimation(keyPath: "transform.scale")
             animation.fromValue = 1
             animation.toValue = 0.5
@@ -60,14 +60,15 @@ final class AvatarImage: UIControl {
             animation.isRemovedOnCompletion = false
             
             DispatchQueue.main.async {
-                self.avatarImage.layer.add(animation, forKey: nil)
+                self?.avatarImage.layer.add(animation, forKey: nil)
             }
             animation.isRemovedOnCompletion = true
         }
     }
     
     private func imageDownSpringsAnimation () {
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
+
             let animation = CASpringAnimation(keyPath: "transform.scale")
             animation.fromValue = 0.5
             animation.toValue = 1
@@ -78,7 +79,7 @@ final class AvatarImage: UIControl {
             animation.isRemovedOnCompletion = false
             
             DispatchQueue.main.async {
-                self.avatarImage.layer.add(animation, forKey: nil)
+                self?.avatarImage.layer.add(animation, forKey: nil)
             }
             animation.isRemovedOnCompletion = true
         }

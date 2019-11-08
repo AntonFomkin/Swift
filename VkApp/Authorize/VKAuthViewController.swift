@@ -39,12 +39,12 @@ class VKAuthViewController: UIViewController {
         // MARK: Настройка дизайна Navigator & TabBar
         let navigationBarAppearance = UINavigationBar.appearance()
         navigationBarAppearance.tintColor = UIColor.white
-        navigationBarAppearance.barTintColor = UIColor(red: 66.0/255.0, green: 118.0/255.0, blue: 166.0/255.0, alpha: 1.0)
+        navigationBarAppearance.barTintColor = UIColor.appNavBarTintColor
         
         
         let tabBarAppearance = UITabBar.appearance()
         tabBarAppearance.tintColor = UIColor.white
-        tabBarAppearance.barTintColor = UIColor(red: 66.0/255.0, green: 118.0/255.0, blue: 166.0/255.0, alpha: 1.0)
+        tabBarAppearance.barTintColor = UIColor.appNavBarTintColor
     }
     
     

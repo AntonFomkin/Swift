@@ -95,7 +95,7 @@ class LettersPicker: UIControl {
                     
                     let button = UIButton(type: .system)
                     button.setTitle(String(value!), for: .normal)
-                    button.setTitleColor(UIColor(red: 56.0/255, green: 54.0/255, blue: 152.0/255, alpha: 1.0), for: .normal)
+                    button.setTitleColor(UIColor.appTitleButton, for: .normal)
                     button.setTitleColor(.white, for: .selected)
                     button.addTarget(self, action: #selector(self?.selectLetters(_:)), for: .touchUpInside)
                     self?.buttons.append(button)

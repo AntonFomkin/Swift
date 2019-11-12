@@ -124,7 +124,7 @@ extension AllFriendsViewController: UITableViewDataSource {
         
         headerCell.nameLetter.text = String(arrayFirstLetters()[section]!)
         headerCell.backgroundColor = UIColor.white
-        headerCell.nameLetter.textColor = UIColor(red: 29.0, green: 40.0, blue: 161.0, alpha: 1.0)
+        headerCell.nameLetter.textColor = UIColor.appNameLetter
         
         return headerCell
     }

@@ -14,7 +14,7 @@ final class CircleProgressBar: UIView {
         super.draw(rect)
         
         self.layer.cornerRadius = self.layer.bounds.width / 2
-        self.layer.backgroundColor = UIColor(red: 198/255, green: 185/255, blue: 171/255, alpha: 1.0).cgColor
+        self.layer.backgroundColor = UIColor.appCicleProgressBar.cgColor
         self.clipsToBounds = true
     }
 }

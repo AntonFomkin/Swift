@@ -295,57 +295,78 @@ fileprivate func parseJSONPhotoCurrentFriend (for startPoint : [String: AnyObjec
     return cellPresenters
 }
 
+protocol ProxyForService: class {
+    func getDataFromVK (idFriend: String?,findGroupsToName: String?, typeOfContent: TypeOfRequest, completionBlock: @escaping ([CellPresenter],[UsersVK]) -> ())
+}
 
-func getDataFromVK (idFriend: String?,findGroupsToName: String?, typeOfContent: TypeOfRequest, completionBlock: @escaping ([CellPresenter],[UsersVK]) -> ()) {
+final class Proxy: ProxyForService {
+    private var trueSevice: ProxyForService
     
-    var arr : [UsersVK] = []
-    var cellPresenters : [CellPresenter] = []
-
-    let currentSession = getCurrentSession(idFriend: idFriend,findGroupsToName: findGroupsToName, typeOfContent: typeOfContent)
-    let session = currentSession.0
-    let request = currentSession.1
+    init(trueSevice: ProxyForService) {
+        self.trueSevice = trueSevice
+    }
     
-    let requestTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-        guard let data = data, error == nil else { return }
-        
-        DispatchQueue.global().async() { 
-            
-            let jsn = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
-            guard let json = jsn else { return }
-            
-            let startPoint = json as? [String: AnyObject]
-            guard startPoint != nil else { return }
-            
-            switch typeOfContent {
-                
-            case .getFriends:
-                
-                let parseJSONFriends = parseJSONFriendsVK(for: startPoint)
-                cellPresenters = parseJSONFriends.0
-                arr = parseJSONFriends.1
-                
-            case .getGroups, .getSwiftGroup, .getFindGroups:
-                
-                cellPresenters = parseJSONGroupsVK(for: startPoint)
-                
-                
-            case .getNews:
-                
-                cellPresenters = parseJSONNewsVK(for: startPoint)
-                
-            case .getPhotoAlbumCurrentFriend:
-                cellPresenters = parseJSONPhotoCurrentFriend(for: startPoint)
-                
-            } //switchEnd
-            
-            DispatchQueue.main.async {
-                completionBlock(cellPresenters,arr)
-            }
-            
+    func getDataFromVK(idFriend: String?, findGroupsToName: String?, typeOfContent: TypeOfRequest, completionBlock: @escaping ([CellPresenter], [UsersVK]) -> ()) {
+        print("Log: start request to VK, now:\(Date())")
+        trueSevice.getDataFromVK(idFriend: idFriend, findGroupsToName: findGroupsToName, typeOfContent: typeOfContent) { [weak self] (CellPresenter, UsersVK) in
+            print("Log: end request to VK, now:\(Date())")
+            completionBlock(CellPresenter, UsersVK)
         }
     }
-    requestTask.resume()
+}
+
+final class GetDataService: ProxyForService {
     
+    func getDataFromVK (idFriend: String?,findGroupsToName: String?, typeOfContent: TypeOfRequest, completionBlock: @escaping ([CellPresenter],[UsersVK]) -> ()) {
+        
+        var arr : [UsersVK] = []
+        var cellPresenters : [CellPresenter] = []
+        
+        let currentSession = getCurrentSession(idFriend: idFriend,findGroupsToName: findGroupsToName, typeOfContent: typeOfContent)
+        let session = currentSession.0
+        let request = currentSession.1
+        
+        let requestTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
+            guard let data = data, error == nil else { return }
+            
+            DispatchQueue.global().async() {
+                
+                let jsn = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+                guard let json = jsn else { return }
+                
+                let startPoint = json as? [String: AnyObject]
+                guard startPoint != nil else { return }
+                
+                switch typeOfContent {
+                    
+                case .getFriends:
+                    
+                    let parseJSONFriends = parseJSONFriendsVK(for: startPoint)
+                    cellPresenters = parseJSONFriends.0
+                    arr = parseJSONFriends.1
+                    
+                case .getGroups, .getSwiftGroup, .getFindGroups:
+                    
+                    cellPresenters = parseJSONGroupsVK(for: startPoint)
+                    
+                    
+                case .getNews:
+                    
+                    cellPresenters = parseJSONNewsVK(for: startPoint)
+                    
+                case .getPhotoAlbumCurrentFriend:
+                    cellPresenters = parseJSONPhotoCurrentFriend(for: startPoint)
+                    
+                } //switchEnd
+                
+                DispatchQueue.main.async {
+                    completionBlock(cellPresenters,arr)
+                }
+                
+            }
+        }
+        requestTask.resume()
+    }
 }
 
 fileprivate func getCurrentFoto(completionBlock: @escaping ([FotoCurrentUser]) -> ()) {

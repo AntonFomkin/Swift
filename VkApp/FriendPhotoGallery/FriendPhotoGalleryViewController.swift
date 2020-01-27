@@ -26,7 +26,11 @@ final class FriendPhotoGalleryViewController: UIViewController {
         
         descriptionPhoto.isHidden = true
         
-        getDataFromVK(idFriend: idFriend,findGroupsToName: nil ,typeOfContent: .getPhotoAlbumCurrentFriend) { [weak self] (cellPresenters,theCap) in
+        let useService = GetDataService()
+
+        Proxy(trueSevice: useService).getDataFromVK(idFriend: idFriend,findGroupsToName: nil ,typeOfContent: .getPhotoAlbumCurrentFriend) { [weak self] (cellPresenters,theCap) in
+        
+       // useService.getDataFromVK(idFriend: idFriend,findGroupsToName: nil ,typeOfContent: .getPhotoAlbumCurrentFriend) { [weak self] (cellPresenters,theCap) in
             
             self?.cellPresenters = cellPresenters
             

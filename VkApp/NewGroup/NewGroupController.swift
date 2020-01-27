@@ -14,7 +14,10 @@ class NewGroupController: UITableViewController {
 
     override func viewDidLoad() {
         
-        getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getSwiftGroup) { [weak self] (cellPresenters,theCap) in
+        let useService = GetDataService()
+        Proxy(trueSevice: useService).getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getSwiftGroup) { [weak self] (cellPresenters,theCap) in
+        
+     //   useService.getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getSwiftGroup) { [weak self] (cellPresenters,theCap) in
             
             self?.cellPresentersAddGroup = cellPresenters
             

@@ -61,7 +61,10 @@ class AllFriendsViewController: UIViewController {
         // MARK: Подгружаем прототип ячейки
         tableView.register(UINib(nibName: "HeaderCell", bundle: nil), forHeaderFooterViewReuseIdentifier:  HeaderCellSectionTableView.reuseId)
         
-        getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getFriends) { [weak self] (cellPresenters,friendList) in
+        let useService = GetDataService()
+        Proxy(trueSevice: useService).getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getFriends) { [weak self] (cellPresenters,friendList) in
+        
+     //   useService.getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getFriends) { [weak self] (cellPresenters,friendList) in
             
             self?.lettersPicker.addToArrayCellPresenters(arr: cellPresenters.sorted(by: { $0.text[ $0.text.index(after: $0.text.firstIndex(of: " ")!)] < $1.text [$1.text.index(after: $1.text.firstIndex(of: " ")!)] } ))
             

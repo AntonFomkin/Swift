@@ -38,7 +38,10 @@ class MyGroupController: UITableViewController {
             typeOfContent = .getGroups
         }
         
-        getDataFromVK(idFriend: nil,findGroupsToName: searchText,typeOfContent: typeOfContent) { [weak self] (cellPresenters,theCap) in
+        let useService = GetDataService()
+        Proxy(trueSevice: useService).getDataFromVK(idFriend: nil,findGroupsToName: searchText,typeOfContent: typeOfContent) { [weak self] (cellPresenters,theCap) in
+        
+    //    useService.getDataFromVK(idFriend: nil,findGroupsToName: searchText,typeOfContent: typeOfContent) { [weak self] (cellPresenters,theCap) in
             
             self?.cellPresenters = cellPresenters
             

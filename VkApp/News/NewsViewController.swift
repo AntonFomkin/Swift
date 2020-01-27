@@ -19,7 +19,10 @@ class NewsViewController: UITableViewController {
         tableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier:  NewsCell.reuseId)
         
         /* theCap - просто заглушка */
-        getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getNews) { [weak self] (cellPresenters, theCap) in
+        let useService = GetDataService()
+        Proxy(trueSevice: useService).getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getNews) { [weak self] (cellPresenters, theCap) in
+        
+      //  useService.getDataFromVK(idFriend: nil,findGroupsToName: nil,typeOfContent: .getNews) { [weak self] (cellPresenters, theCap) in
             
             self?.cellPresenters = cellPresenters
            
